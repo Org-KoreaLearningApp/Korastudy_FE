@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/screens/welcome/welcome_page_2.dart';
+import 'package:korastudy_fe/screens/welcome/welcome_page_4.dart';
 import 'screens/welcome/splash.dart';
-import 'screens/welcome/welcome_page_1.dart';
+import 'package:korastudy_fe/screens/welcome/welcome_page_1.dart';
+import 'package:korastudy_fe/screens/welcome/welcome_page_3.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -13,7 +16,10 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => SplashScreen(),
-        '/welcome': (context) => WelcomePage1(),
+        '/welcome1': (context) => WelcomePage1(),
+        '/welcome2': (context) => WelcomePage2(),
+        '/welcome3': (context) => WelcomePage3(),
+        '/welcome4': (context) => WelcomePage4(),
       },
     );
   }

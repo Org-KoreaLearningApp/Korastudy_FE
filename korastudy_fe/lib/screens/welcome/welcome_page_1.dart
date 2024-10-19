@@ -24,7 +24,7 @@ class WelcomePage1 extends StatelessWidget {
                   height: screenHeight * 0.44,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('lib/assets/images/Koreanlearn.png'),
+                      image: AssetImage('assets/images/Koreanlearn.png'),
                       fit: BoxFit.fitWidth,
                     ),
                   ),
@@ -105,7 +105,7 @@ class WelcomePage1 extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.13, vertical: screenHeight * 0.02),
                   ),
                   onPressed: () {
-                    // Add your onPressed code here!
+                    Navigator.pushNamed(context, '/welcome2');
                   },
                   child: Text(
                     'Bắt đầu học nào ',

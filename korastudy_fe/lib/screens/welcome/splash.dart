@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'splash.dart';
 
-class MyApp extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Splash Screen App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: SplashScreen(),
-    );
-  }
+  _SplashScreenState createState() => _SplashScreenState();
 }
-class SplashScreen extends StatelessWidget {
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.pushReplacementNamed(context, '/welcome1');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,14 +21,14 @@ class SplashScreen extends StatelessWidget {
         fit: StackFit.expand,
         children: <Widget>[
           Image.asset(
-            'lib/assets/images/background.png',
+            'assets/images/background.png',
             fit: BoxFit.cover,
           ),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Image.asset('lib/assets/images/Logo.png'),
+                Image.asset('assets/images/logo.png'),
                 SizedBox(height: 20),
                 CircularProgressIndicator(),
               ],
