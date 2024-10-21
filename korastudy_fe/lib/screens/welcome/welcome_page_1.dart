@@ -18,7 +18,7 @@ class WelcomePage1 extends StatelessWidget {
             children: <Widget>[
               Positioned(
                 top: screenHeight * 0.28,
-                left: screenWidth * -0.13,
+                left: screenWidth * -0.1,
                 child: Container(
                   width: screenWidth * 1.13,
                   height: screenHeight * 0.44,
@@ -31,13 +31,22 @@ class WelcomePage1 extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: screenHeight * 0.02,
+                top: screenHeight * 0.001,
                 left: screenWidth * 0.75,
                 child: Container(
                   width: screenWidth * 0.6,
                   height: screenHeight * 0.25,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.elliptical(234, 209)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromRGBO(
+                            94, 186, 217, 0.5), // Shadow with some transparency
+                        blurRadius: 90, // How much blur you want
+                        spreadRadius: 30, // How much the shadow spreads
+                        offset: Offset(0, 0), // Center the shadow
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -51,7 +60,7 @@ class WelcomePage1 extends StatelessWidget {
                     color: Color.fromRGBO(0, 0, 0, 1),
                     fontFamily: 'Inter',
                     fontSize: screenWidth * 0.05,
-                    fontWeight: FontWeight.normal,
+                    fontWeight: FontWeight.bold,
                     height: 1,
                   ),
                 ),
@@ -60,7 +69,7 @@ class WelcomePage1 extends StatelessWidget {
                 top: screenHeight * 0.72,
                 left: screenWidth * 0.05,
                 child: Text(
-                  'GIờ thì hãy cùng tìm hiểu cách KoraStudy\n giúp bạn luyện thi topik nhé   ',
+                  'Giờ thì hãy cùng tìm hiểu cách KoraStudy\n giúp bạn luyện thi topik nhé   ',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color.fromRGBO(0, 0, 0, 1),
@@ -79,6 +88,15 @@ class WelcomePage1 extends StatelessWidget {
                   height: screenHeight * 0.25,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.elliptical(234, 209)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromRGBO(
+                            94, 186, 217, 0.5), // Shadow with some transparency
+                        blurRadius: 100, // How much blur you want
+                        spreadRadius: 30, // How much the shadow spreads
+                        offset: Offset(0, 0), // Center the shadow
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -90,12 +108,23 @@ class WelcomePage1 extends StatelessWidget {
                   height: screenHeight * 0.25,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.elliptical(234, 209)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromRGBO(
+                            94, 186, 217, 0.5), // Shadow with some transparency
+                        blurRadius: 100, // How much blur you want
+                        spreadRadius: 30, // How much the shadow spreads
+                        offset: Offset(0, 0), // Center the shadow
+                      ),
+                    ],
                   ),
                 ),
               ),
               Positioned(
-                top: screenHeight * 0.87,
-                left: screenWidth * 0.21,
+                top: screenHeight * 0.83,
+                left: screenWidth * 0.1,
+                right: screenWidth * 0.1,
+              
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromRGBO(30, 165, 252, 1),
@@ -114,7 +143,7 @@ class WelcomePage1 extends StatelessWidget {
                       color: Color.fromRGBO(255, 255, 255, 1),
                       fontFamily: 'Inter',
                       fontSize: screenWidth * 0.04,
-                      fontWeight: FontWeight.normal,
+                      fontWeight: FontWeight.bold,
                       height: 1,
                     ),
                   ),

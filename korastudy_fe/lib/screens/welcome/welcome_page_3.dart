@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/screens/welcome/topik_chose_page.dart';
 import 'package:korastudy_fe/screens/welcome/welcome_page_2.dart';
 import 'package:korastudy_fe/screens/welcome/welcome_page_3.dart';
 import 'package:korastudy_fe/screens/welcome/welcome_page_4.dart';
@@ -40,7 +41,7 @@ class WelcomePage3 extends StatelessWidget {
             children: <Widget>[
               Positioned(
                 top: screenHeight * 0.32,
-                left: screenWidth * -0.2,
+                left: screenWidth * 0,
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                   width: screenWidth * 1,
@@ -98,7 +99,7 @@ class WelcomePage3 extends StatelessWidget {
                       color: Color.fromRGBO(255, 255, 255, 1),
                       fontFamily: 'Inter',
                       fontSize: screenWidth * 0.04,
-                      fontWeight: FontWeight.normal,
+                      fontWeight: FontWeight.bold,
                       height: 1,
                     ),
                   ),
@@ -162,6 +163,13 @@ class WelcomePage3 extends StatelessWidget {
                   ),
                   onPressed: () {
                     // Add navigation logic for "Bỏ qua"
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              TopikChosePageWidget()), // Replace with your next page
+                    );
+
                   },
                   child: Text(
                     'Bỏ qua',
@@ -171,6 +179,7 @@ class WelcomePage3 extends StatelessWidget {
                       fontFamily: 'Inter',
                       fontSize: screenWidth * 0.05,
                       fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline,
                       height: 1,
                     ),
                   ),
@@ -244,13 +253,3 @@ class WelcomePage3 extends StatelessWidget {
   }
 }
 
-class NextPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text('Next Page'),
-      ),
-    );
-  }
-}

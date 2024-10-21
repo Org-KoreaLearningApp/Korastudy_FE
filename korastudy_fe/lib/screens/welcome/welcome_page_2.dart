@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/screens/welcome/topik_chose_page.dart';
 import 'package:korastudy_fe/screens/welcome/welcome_page_3.dart';
 
 class WelcomePage2 extends StatelessWidget {
@@ -14,7 +15,9 @@ class WelcomePage2 extends StatelessWidget {
             // Swiped left to go to the next page
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => WelcomePage3()), // Replace with your next page
+              MaterialPageRoute(
+                  builder: (context) =>
+                      WelcomePage3()), // Replace with your next page
             );
           } else if (details.primaryVelocity! > 0) {
             // Swiped right to go back to the previous page
@@ -34,7 +37,7 @@ class WelcomePage2 extends StatelessWidget {
                 left: screenWidth * -0.15,
                 child: Container(
                   width: screenWidth * 1.4,
-                  height: screenHeight * 0.36,
+                  height: screenHeight * 0.32,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('assets/images/Koreanlearn2.png'),
@@ -82,13 +85,13 @@ class WelcomePage2 extends StatelessWidget {
                   },
                   child: Text(
                     'Đăng Nhập / Đăng Ký',
-                    textAlign:
-                        TextAlign.center, // Centering the text inside the button
+                    textAlign: TextAlign
+                        .center, // Centering the text inside the button
                     style: TextStyle(
                       color: Color.fromRGBO(255, 255, 255, 1),
                       fontFamily: 'Inter',
                       fontSize: screenWidth * 0.04,
-                      fontWeight: FontWeight.normal,
+                      fontWeight: FontWeight.bold,
                       height: 1,
                     ),
                   ),
@@ -147,10 +150,17 @@ class WelcomePage2 extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
-                    padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                   ),
                   onPressed: () {
                     // Add navigation logic for "Bỏ qua"
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              TopikChosePageWidget()), // Replace with your next page
+                    );
                   },
                   child: Text(
                     'Bỏ qua',
@@ -161,6 +171,7 @@ class WelcomePage2 extends StatelessWidget {
                       fontSize: screenWidth * 0.05,
                       fontWeight: FontWeight.bold,
                       height: 1,
+                      decoration: TextDecoration.underline,
                     ),
                   ),
                 ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:korastudy_fe/screens/welcome/welcome_page_2.dart';
-import 'package:korastudy_fe/screens/welcome/welcome_page_3.dart';
-import 'package:korastudy_fe/screens/welcome/welcome_page_4.dart';
+import 'package:korastudy_fe/screens/welcome/topik_chose_page.dart';
+import 'welcome_page_3.dart';
 
 class WelcomePage4 extends StatelessWidget {
   @override
@@ -9,12 +8,21 @@ class WelcomePage4 extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
+    // Aspect ratio of the image
+    final double imageAspectRatio = 390 / 302;
+
+    // Determine the scaling factor
+    final double scalingFactor = screenWidth / 390;
+
+    // Calculate the scaled dimensions
+    final double scaledWidth = screenWidth;
+    final double scaledHeight = scaledWidth / imageAspectRatio;
+
     return Scaffold(
       body: GestureDetector(
         onHorizontalDragEnd: (details) {
           if (details.primaryVelocity! < 0) {
             // Swiped left to go to the next page
-            
           } else if (details.primaryVelocity! > 0) {
             // Swiped right to go back to the previous page
             Navigator.pop(
@@ -34,16 +42,15 @@ class WelcomePage4 extends StatelessWidget {
           child: Stack(
             children: <Widget>[
               Positioned(
-                top: screenHeight * 0.32,
-                left: screenWidth * -0.2,
+                top: screenHeight * 0.28,
+                left: screenWidth * 0,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                  width: screenWidth * 1,
-                  height: screenHeight * 0.3,
+                  width: scaledWidth,
+                  height: scaledHeight,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('assets/images/Koreanlearn4.png'),
-                      fit: BoxFit.fitWidth,
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ),
@@ -93,7 +100,7 @@ class WelcomePage4 extends StatelessWidget {
                       color: Color.fromRGBO(255, 255, 255, 1),
                       fontFamily: 'Inter',
                       fontSize: screenWidth * 0.04,
-                      fontWeight: FontWeight.normal,
+                      fontWeight: FontWeight.bold,
                       height: 1,
                     ),
                   ),
@@ -157,6 +164,12 @@ class WelcomePage4 extends StatelessWidget {
                   ),
                   onPressed: () {
                     // Add navigation logic for "Bỏ qua"
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              TopikChosePageWidget()), // Replace with your next page
+                    );
                   },
                   child: Text(
                     'Bỏ qua',
@@ -166,6 +179,7 @@ class WelcomePage4 extends StatelessWidget {
                       fontFamily: 'Inter',
                       fontSize: screenWidth * 0.05,
                       fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline,
                       height: 1,
                     ),
                   ),
@@ -210,21 +224,21 @@ class WelcomePage4 extends StatelessWidget {
                       ),
                       SizedBox(width: screenWidth * 0.013),
                       Container(
-                        width: screenWidth * 0.15,
-                        height: screenHeight * 0.012,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Color.fromRGBO(135, 185, 231, 1),
-                        ),
-                      ),
-                      SizedBox(width: screenWidth * 0.013),
-                      Container(
                         width: screenWidth * 0.025,
                         height: screenHeight * 0.012,
                         decoration: BoxDecoration(
                           color: Color.fromRGBO(167, 171, 153, 1),
                           borderRadius:
                               BorderRadius.all(Radius.elliptical(10, 10)),
+                        ),
+                      ),
+                      SizedBox(width: screenWidth * 0.013),
+                      Container(
+                        width: screenWidth * 0.15,
+                        height: screenHeight * 0.012,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Color.fromRGBO(135, 185, 231, 1),
                         ),
                       ),
                     ],
@@ -234,17 +248,6 @@ class WelcomePage4 extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class NextPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text('Next Page'),
       ),
     );
   }

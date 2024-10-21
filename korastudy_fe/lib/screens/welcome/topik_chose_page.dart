@@ -1,178 +1,148 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/screens/vocabulary/vocabulary_list.dart';
 
 class TopikChosePageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 390,
-      height: 844,
-      decoration: BoxDecoration(
-        color: Color.fromRGBO(255, 255, 255, 1),
-      ),
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-            top: 0,
-            left: 0,
-            child: Container(),
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+                'assets/images/topik_chose_page.png'), // Add your background image here
+            fit: BoxFit.cover, // Adjust the image to fit the screen
           ),
-          Positioned(
-            top: 518,
-            left: -72,
-            child: Container(
-              width: 580,
-              height: 387,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/Image2.png'),
-                  fit: BoxFit.fitWidth,
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: -86,
-            left: -107,
-            child: Container(
-              width: 234,
-              height: 209,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.elliptical(234, 209)),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 143,
-            left: 115,
-            child: Container(
-              width: 160,
-              height: 160,
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(224, 105, 78, 1),
-                borderRadius: BorderRadius.all(Radius.elliptical(160, 160)),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 198,
-            left: 60,
-            child: Container(
-              width: 270,
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Color.fromRGBO(216, 201, 175, 1),
-              ),
-              child: Center(
-                child: Text(
-                  'Chọn Cấp độ để bắt đầu',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Color.fromRGBO(0, 0, 0, 1),
-                    fontFamily: 'Inter',
-                    fontSize: 20,
-                    letterSpacing: -0.3,
-                    fontWeight: FontWeight.normal,
-                    height: 1,
+        ),
+        child: SafeArea(
+          child: Stack(
+            children: <Widget>[
+              // Center Title
+              Positioned(
+                top: 145, // Adjust the position as needed
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    width: 160,
+                    height: 160,
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(224, 105, 78, 1),
+                      borderRadius:
+                          BorderRadius.all(Radius.elliptical(160, 160)),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-          Positioned(
-            top: 248,
-            left: 284,
-            child: Container(
-              width: 234,
-              height: 209,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.elliptical(234, 209)),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 402,
-            left: -95,
-            child: Container(
-              width: 234,
-              height: 209,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.elliptical(234, 209)),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 383,
-            left: 75,
-            child: Container(
-              width: 240,
-              height: 149,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    width: 240,
+              Positioned(
+                top: 200,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    width: 270,
                     height: 50,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color.fromRGBO(0, 0, 0, 0.25),
-                          offset: Offset(0, 4),
-                          blurRadius: 4,
-                        ),
-                      ],
-                      color: Color.fromRGBO(255, 249, 249, 1),
+                      borderRadius: BorderRadius.circular(10),
+                      color: Color.fromRGBO(216, 201, 175, 1),
                     ),
                     child: Center(
+                      child: Text(
+                        'Chọn Cấp độ để bắt đầu',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Color.fromRGBO(0, 0, 0, 1),
+                          fontFamily: 'Inter',
+                          fontSize: 20,
+                          letterSpacing: -0.3,
+                          fontWeight: FontWeight.bold,
+                          height: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              // Center TOPIK I and TOPIK II buttons
+              Positioned(
+                top: 350,
+                left: 0,
+                right: 0,
+                child: Column(
+                  children: <Widget>[
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Color.fromRGBO(0, 0, 0, 1),
+                        backgroundColor: Color.fromRGBO(255, 249, 249, 1),
+                        shadowColor: Color.fromRGBO(0, 0, 0, 0.25),
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        minimumSize: Size(240, 50),
+                      ),
+                      onPressed: () {
+                        // Add your onPressed code here!
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  Vocabulary_listWidget()), // Replace with your next page
+                        );
+                      },
                       child: Text(
                         'TOPIK I',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Color.fromRGBO(0, 0, 0, 1),
                           fontFamily: 'Inter',
                           fontSize: 20,
                           letterSpacing: -0.3,
-                          fontWeight: FontWeight.normal,
+                          fontWeight: FontWeight.bold,
                           height: 1,
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 38),
-                  Container(
-                    width: 240,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color.fromRGBO(0, 0, 0, 0.25),
-                          offset: Offset(0, 4),
-                          blurRadius: 4,
+                    SizedBox(height: 38),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Color.fromRGBO(0, 0, 0, 1),
+                        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+                        shadowColor: Color.fromRGBO(0, 0, 0, 0.25),
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                      ],
-                      color: Color.fromRGBO(255, 255, 255, 1),
-                    ),
-                    child: Center(
+                        minimumSize: Size(240, 50),
+                      ),
+                      onPressed: () {
+                        // Add your onPressed code here!
+                         Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  Vocabulary_listWidget()), // Replace with your next page
+                        );
+                      },
                       child: Text(
                         'TOPIK II',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Color.fromRGBO(0, 0, 0, 1),
                           fontFamily: 'Inter',
                           fontSize: 20,
                           letterSpacing: -0.3,
-                          fontWeight: FontWeight.normal,
+                          fontWeight: FontWeight.bold,
                           height: 1,
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
