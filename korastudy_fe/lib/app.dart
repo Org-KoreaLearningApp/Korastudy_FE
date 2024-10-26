@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/screens/vocabulary/dictionary_verb.dart';
+import 'package:korastudy_fe/screens/vocabulary/flashcard.dart';
+import 'package:korastudy_fe/screens/vocabulary/test_mix.dart';
+import 'package:korastudy_fe/screens/vocabulary/test_splash.dart';
 import 'package:korastudy_fe/screens/vocabulary/vocabulary_list.dart';
 import 'package:korastudy_fe/screens/vocabulary/vocabulary_list_mean.dart';
 import 'package:korastudy_fe/screens/welcome/welcome_page_2.dart';
@@ -24,6 +28,10 @@ class MyApp extends StatelessWidget {
         '/welcome4': (context) => WelcomePage4(),
         '/vocabulary': (context) => Vocabulary_listWidget(),
         '/listvoca': (context) => Vocabulary_list_meanWidget(),
+        '/dictionary': (context) => DictionaryVerbWidget(),
+        '/flashcard': (context) => FlashcardPage(),
+        '/testmixt': (context) => MatchingPage(),
+        '/testplash': (context) => TestPage(),
       },
     );
   }

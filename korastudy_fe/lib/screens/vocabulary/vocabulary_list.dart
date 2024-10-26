@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/screens/vocabulary/dictionary_verb.dart';
+import 'package:korastudy_fe/screens/vocabulary/test_splash.dart';
 import 'package:korastudy_fe/screens/vocabulary/vocabulary_list_mean.dart';
 
 class Vocabulary_listWidget extends StatelessWidget {
@@ -20,16 +22,30 @@ class Vocabulary_listWidget extends StatelessWidget {
         ),
         backgroundColor: Color.fromRGBO(30, 165, 252, 1),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,size: 30 , color: Color.fromRGBO(255, 255, 255, 1),),
+          icon: Icon(
+            Icons.arrow_back,
+            size: 30,
+            color: Color.fromRGBO(255, 255, 255, 1),
+          ),
           onPressed: () {
             // Add your onPressed code here!
           },
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.search, size: 30, color: Color.fromRGBO(255, 255, 255, 1),),
+            icon: Icon(
+              Icons.search,
+              size: 30,
+              color: Color.fromRGBO(255, 255, 255, 1),
+            ),
             onPressed: () {
               // Add your onPressed code here!
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        DictionaryVerbWidget()), // Replace with your next page
+              );
             },
           ),
         ],
@@ -40,8 +56,8 @@ class Vocabulary_listWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: Color.fromRGBO(255, 255, 255, 1),
           ),
-          child: Container (
-          // Add padding to the top
+          child: Container(
+            // Add padding to the top
             child: Column(
               children: <Widget>[
                 Padding(
@@ -49,31 +65,32 @@ class Vocabulary_listWidget extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Color.fromRGBO(0, 0, 0, 1),
-                          backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-                          shadowColor: Color.fromRGBO(0, 0, 0, 0.25),
-                          elevation: 4,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          minimumSize: Size(154, 40),
+                      DropdownButton<String>(
+                        value: 'Cấp độ 1', // Initial selected value
+                        icon: Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromRGBO(0, 0, 0, 1),
+                          size: 20,
                         ),
-                        onPressed: () {
-                          // Add your onPressed code here!
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 16,
+                          letterSpacing: -0.3,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromRGBO(0, 0, 0, 1),
+                        ),
+                        dropdownColor: Color.fromRGBO(255, 255, 255, 1),
+                        underline: SizedBox(), // Removes the underline
+                        items: <String>['Cấp độ 1', 'Cấp độ 2', 'Cấp độ 3']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          // Handle the value change
                         },
-                        child: Text(
-                          'Cấp độ 1',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 16,
-                            letterSpacing: -0.3,
-                            fontWeight: FontWeight.bold,
-                            height: 1,
-                          ),
-                        ),
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -88,6 +105,13 @@ class Vocabulary_listWidget extends StatelessWidget {
                         ),
                         onPressed: () {
                           // Add your onPressed code here!
+                          Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  TestPage()), // Replace with your next page
+                        );
+                          
                         },
                         child: Text(
                           'Kiểm tra',
@@ -212,7 +236,9 @@ class Vocabulary_listWidget extends StatelessWidget {
         // Add your navigation code here!
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Vocabulary_list_meanWidget()), // Replace AnotherPage with your target page
+          MaterialPageRoute(
+              builder: (context) =>
+                  Vocabulary_list_meanWidget()), // Replace AnotherPage with your target page
         );
       },
       child: Container(
@@ -264,20 +290,6 @@ class Vocabulary_listWidget extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class AnotherPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Another Page'),
-      ),
-      body: Center(
-        child: Text('This is another page'),
       ),
     );
   }

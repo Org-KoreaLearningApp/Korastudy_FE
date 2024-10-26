@@ -154,7 +154,7 @@ class WelcomePage4 extends StatelessWidget {
               ),
               Positioned(
                 top: screenHeight * 0.93,
-                left: screenWidth * 0.35,
+                left: screenWidth * 0.38,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
