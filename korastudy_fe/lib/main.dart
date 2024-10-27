@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:korastudy_fe/screens/HomeScreen.dart';
+import 'package:korastudy_fe/pages/grammar/grammar_main.dart';
+import 'package:korastudy_fe/pages/home/home_screen.dart';
 
-void main() {
+void main() async {
   runApp(MyApp());
 }
 
@@ -13,7 +14,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "KoraStudy App",
-      home: Homescreen(),
+      home: HomeScreen(),
+      routes: {
+        '/grammar': (context) => const GrammarMain(),
+        // Thêm các route khác ở đây nếu cần
+      },
     );
   }
 }
