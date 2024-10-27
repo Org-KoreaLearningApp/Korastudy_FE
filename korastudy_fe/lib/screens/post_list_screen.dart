@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:korean_flutter/widgets/post_list.dart';
-import 'package:korean_flutter/widgets/post_type_button.dart';
+import 'package:korastudy_fe/widgets/post_list.dart';
+import 'package:korastudy_fe/widgets/post_type_button.dart';
 
 class PostListScreen extends StatefulWidget {
   const PostListScreen({super.key});

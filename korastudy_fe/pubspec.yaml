@@ -75,6 +75,8 @@ flutter:
     - assets\images\Koreanlearn4.png
     - assets\images\topik_chose_page.png
     - assets\images\vocab.png
+    - assets\images\bg.png
+    - assets\images\girl_studying.png
     # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

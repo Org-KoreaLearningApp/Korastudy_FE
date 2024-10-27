@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:korean_flutter/screens/post_comment_screen.dart';
-import 'package:korean_flutter/screens/post_detail_screen.dart';
+import 'package:korastudy_fe/screens/post_comment_screen.dart';
+import 'package:korastudy_fe/screens/post_detail_screen.dart';
+
 
 class PostScreen extends StatelessWidget {
   const PostScreen({super.key});

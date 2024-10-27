@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/screens/login_screen.dart';
+import 'package:korastudy_fe/screens/register_screen.dart';
 import 'package:korastudy_fe/screens/vocabulary/dictionary_verb.dart';
 import 'package:korastudy_fe/screens/vocabulary/flashcard.dart';
 import 'package:korastudy_fe/screens/vocabulary/test_mix.dart';
@@ -30,8 +32,11 @@ class MyApp extends StatelessWidget {
         '/listvoca': (context) => Vocabulary_list_meanWidget(),
         '/dictionary': (context) => DictionaryVerbWidget(),
         '/flashcard': (context) => FlashcardPage(),
-        '/testmixt': (context) => MatchingPage(),
+        '/testmix': (context) => MatchingPage(),
         '/testplash': (context) => TestPage(),
+        '/login': (context) => LoginScreen(),
+        '/register': (context) => RegisterScreen(),
+        
       },
     );
   }

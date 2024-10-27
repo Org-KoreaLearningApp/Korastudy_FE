@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:korean_flutter/widgets/login_input.dart';
+import 'package:korastudy_fe/screens/register_screen.dart';
+import 'package:korastudy_fe/widgets/login_input.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -29,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.all(35.0),
           child: Column(
             children: [
-              Image.asset('assets/images/bg.png'),
+              // Image.asset('assets/images/bg.png'),
               SizedBox(
                 height: 16.0,
               ),
@@ -112,11 +113,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       width: 8,
                     ),
-                    Text(
-                      "Đăng ký",
-                      style: TextStyle(
-                        color: Color(0xFF1EA5FC),
-                        decoration: TextDecoration.underline,
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    RegisterScreen()), // Replace with your next page
+                          );
+                        },
+                        child: Text(
+                          "Đăng ký",
+                          style: TextStyle(
+                            color: Color(0xFF1EA5FC),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ],

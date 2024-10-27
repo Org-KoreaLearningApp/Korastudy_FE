@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:korean_flutter/widgets/post_list.dart';
-import 'package:korean_flutter/widgets/search_input.dart';
+import 'package:korastudy_fe/widgets/post_list.dart';
+import 'package:korastudy_fe/widgets/search_input.dart';
+
 
 class PostSearchScreen extends StatefulWidget {
   const PostSearchScreen({super.key});

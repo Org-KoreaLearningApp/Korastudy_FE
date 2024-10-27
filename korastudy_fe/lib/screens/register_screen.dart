@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:korean_flutter/widgets/login_input.dart';
+import 'package:korastudy_fe/widgets/login_input.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -30,7 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             padding: const EdgeInsets.all(35.0),
             child: Column(
               children: [
-                Image.asset('assets/images/bg.png'),
+                // Image.asset('assets/images/bg.png'),
                 SizedBox(
                   height: 16.0,
                 ),
@@ -128,14 +128,46 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text("Bạn đã có tài khoản?"),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      Text(
-                        "Đăng nhập",
-                        style: TextStyle(
-                          color: Color(0xFF1EA5FC),
-                          decoration: TextDecoration.underline,
+                      TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      RegisterScreen()), // Replace with your next page
+                            );
+                          },
+                          child: Text(
+                            "Đăng nhập",
+                            style: TextStyle(
+                              color: Color(0xFF1EA5FC),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                                            Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Bạn đã có tài khoản?"),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => RegisterScreen(), // Replace with your next page
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Đăng nhập",
+                                style: TextStyle(
+                                  color: Color(0xFF1EA5FC),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],

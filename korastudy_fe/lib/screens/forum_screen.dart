@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:korean_flutter/screens/post_create_screen.dart';
-import 'package:korean_flutter/screens/post_list_screen.dart';
-import 'package:korean_flutter/screens/post_search_screen.dart';
+import 'package:korastudy_fe/screens/post_create_screen.dart';
+import 'package:korastudy_fe/screens/post_list_screen.dart';
+import 'package:korastudy_fe/screens/post_search_screen.dart';
+
 
 class ForumScreen extends StatefulWidget {
   const ForumScreen({super.key});
