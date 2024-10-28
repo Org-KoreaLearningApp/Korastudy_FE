@@ -14,19 +14,31 @@ import 'package:korastudy_fe/pages/welcome/welcome_page_2.dart';
 import 'package:korastudy_fe/pages/welcome/welcome_page_3.dart';
 import 'package:korastudy_fe/pages/welcome/welcome_page_4.dart';
 
-void main() async {
-  runApp(MyApp());
-}
-
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "KoraStudy App",
-      home: Homescreen(),
+      title: 'Splash Screen App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => SplashScreen(),
+        '/welcome1': (context) => WelcomePage1(),
+        '/welcome2': (context) => WelcomePage2(),
+        '/welcome3': (context) => WelcomePage3(),
+        '/welcome4': (context) => WelcomePage4(),
+        '/ChooseTopik': (context) => TopikChosePageWidget(),
+        '/Home': (context) => HomeScreen(),
+        '/Forum': (context) => ForumScreen(),
+        '/Grammar': (context) => const GrammarMain(),
+        '/vocabulary': (context) => Vocabulary_listWidget(),
+        '/listvoca': (context) => Vocabulary_list_meanWidget(),
+        '/dictionary': (context) => DictionaryVerbWidget(),
+        '/flashcard': (context) => FlashcardPage(),
+        '/testmixt': (context) => MatchingPage(),
+      },
     );
   }
 }

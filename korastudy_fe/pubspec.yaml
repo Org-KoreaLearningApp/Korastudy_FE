@@ -33,6 +33,7 @@ dependencies:
   get: ^4.6.6
   persistent_bottom_nav_bar: ^6.2.1
   shared_preferences: ^2.3.2
+  flutter_svg: ^2.0.10+1
   
 
 
@@ -67,16 +68,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets\images\background.png
-    - assets\images\logo.png
-    - assets\images\Koreanlearn.png
-    - assets\images\Koreanlearn2.png
-    - assets\images\Koreanlearn3.png
-    - assets\images\Koreanlearn4.png
-    - assets\images\topik_chose_page.png
-    - assets\images\vocab.png
-    - assets\images\bg.png
-    - assets\images\girl_studying.png
+    - assets/images/
     # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
