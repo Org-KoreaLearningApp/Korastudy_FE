@@ -14,6 +14,10 @@ import 'package:korastudy_fe/pages/welcome/welcome_page_1.dart';
 import 'package:korastudy_fe/pages/welcome/welcome_page_2.dart';
 import 'package:korastudy_fe/pages/welcome/welcome_page_3.dart';
 import 'package:korastudy_fe/pages/welcome/welcome_page_4.dart';
+import 'package:korastudy_fe/routes/app_routes.dart';
+import 'package:korastudy_fe/pages/testpage/listTest.dart'
+    as list_test; // Import đúng cho ListTestWidget
+import 'package:korastudy_fe/pages/testpage/TestPageListening.dart'; // Import đúng cho TestPageListening
 
 void main() async {
   runApp(MyApp());
@@ -43,6 +47,10 @@ class MyApp extends StatelessWidget {
         '/flashcard': (context) => FlashcardPage(),
         '/testmixt': (context) => MatchingPage(),
         '/search': (context) => SearchScreen(),
+        '/listTest': (context) =>
+            list_test.ListTestWidget(), // Thêm route cho ListTestWidget
+        '/testPageListening': (context) =>
+            TestPageListening(), // Thêm route cho TestPageListening
       },
     );
   }
