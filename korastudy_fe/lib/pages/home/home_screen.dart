@@ -45,9 +45,9 @@ class _HomeScreenState extends State<HomeScreen> {
         bucket: bucket,
       ),
       floatingActionButton: Transform.translate(
-        offset: Offset(0, 0), // Kéo nút xuống
+        offset: Offset(0, 0),
         child: FloatingActionButton(
-          backgroundColor: Colors.blue, // Đổi màu thành xanh
+          backgroundColor: Colors.blue,
           child: Icon(
             Icons.add_box,
             color: Colors.white,

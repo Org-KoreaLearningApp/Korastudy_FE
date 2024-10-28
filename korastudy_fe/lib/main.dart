@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:korastudy_fe/pages/forums/forums_screen.dart';
 import 'package:korastudy_fe/pages/grammar/grammar_main.dart';
 import 'package:korastudy_fe/pages/home/home_screen.dart';
+import 'package:korastudy_fe/pages/search/search_main.dart';
 import 'package:korastudy_fe/pages/vocabulary/dictionary_verb.dart';
 import 'package:korastudy_fe/pages/vocabulary/flashcard.dart';
 import 'package:korastudy_fe/pages/vocabulary/test_mix.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         '/dictionary': (context) => DictionaryVerbWidget(),
         '/flashcard': (context) => FlashcardPage(),
         '/testmixt': (context) => MatchingPage(),
+        '/search': (context) => SearchScreen(),
       },
     );
   }
