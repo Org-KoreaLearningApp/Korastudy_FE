@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:korean_flutter/screens/personal_post_screen.dart';
-import 'package:korean_flutter/screens/profile_screen.dart';
+import 'package:korastudy_fe/screens/personal_post_screen.dart';
+import 'package:korastudy_fe/screens/profile_screen.dart';
+
 
 class PersonalScreen extends StatelessWidget {
   const PersonalScreen({super.key});

@@ -1,3 +1,3 @@
-import 'package:korean_flutter/models/User.dart';
+import 'package:korastudy_fe/models/User.dart';
 
 class Loginservice {}

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:korean_flutter/widgets/comment_item.dart';
+import 'package:korastudy_fe/widgets/comment_item.dart';
 
 class PostCommentScreen extends StatefulWidget {
   const PostCommentScreen({super.key});

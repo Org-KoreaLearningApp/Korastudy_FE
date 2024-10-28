@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:korean_flutter/widgets/post_item.dart';
+import 'package:korastudy_fe/widgets/post_item.dart';
 
 class PostList extends StatelessWidget {
   const PostList({super.key});
