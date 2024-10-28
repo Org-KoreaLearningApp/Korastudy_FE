@@ -13,20 +13,21 @@ import 'package:korastudy_fe/pages/welcome/welcome_page_1.dart';
 import 'package:korastudy_fe/pages/welcome/welcome_page_2.dart';
 import 'package:korastudy_fe/pages/welcome/welcome_page_3.dart';
 import 'package:korastudy_fe/pages/welcome/welcome_page_4.dart';
+import 'package:korastudy_fe/routes/app_routes.dart';
 
 void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "KoraStudy App",
-      home: Homescreen(),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       title: "KoraStudy App",
+//       home: SplashScreen(),
+//     );
+//   }
+

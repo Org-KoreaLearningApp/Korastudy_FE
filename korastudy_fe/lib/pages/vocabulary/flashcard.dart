@@ -9,7 +9,7 @@ class FlashcardPage extends StatefulWidget {
 class _FlashcardPageState extends State<FlashcardPage> {
   final List<String> words = ['한국', '베트남', '미국', '영국'];
   final List<String> meanings = ['Korea', 'Vietnam', 'USA', 'UK'];
-
+  
   int currentIndex = 0;
   int knownCount = 0;
   int unknownCount = 0;
@@ -83,7 +83,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
             ),
           ),
           SizedBox(height: 16),
-
+          
           // Progress bar
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32.0),
@@ -94,7 +94,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
             ),
           ),
           SizedBox(height: 16),
-
+          
           // Score indicators
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -103,8 +103,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
                 backgroundColor: Colors.red,
                 child: Text(
                   '$unknownCount',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
               IconButton(
@@ -117,8 +116,7 @@ class _FlashcardPageState extends State<FlashcardPage> {
                 backgroundColor: Colors.blue,
                 child: Text(
                   '$knownCount',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
             ],
