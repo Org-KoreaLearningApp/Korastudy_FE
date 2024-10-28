@@ -26,7 +26,7 @@ class _NavBarState extends State<NavBar> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Nút 1
+                // Nút Trang chủ
                 MaterialButton(
                   minWidth: 30,
                   height: 30,
@@ -48,11 +48,14 @@ class _NavBarState extends State<NavBar> {
                     ],
                   ),
                 ),
-                // Nút 2
+                // Nút Thi
                 MaterialButton(
                   minWidth: 30,
                   height: 30,
-                  onPressed: () => widget.onTabSelected(1),
+                  onPressed: () {
+                    widget.onTabSelected(1);
+                    Navigator.pushNamed(context, '/listTest');
+                  },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -76,7 +79,7 @@ class _NavBarState extends State<NavBar> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Nút 3
+                // Nút Forums
                 MaterialButton(
                   minWidth: 30,
                   height: 30,
@@ -98,7 +101,7 @@ class _NavBarState extends State<NavBar> {
                     ],
                   ),
                 ),
-                // Nút 4
+                // Nút Cá nhân
                 MaterialButton(
                   minWidth: 30,
                   height: 30,
