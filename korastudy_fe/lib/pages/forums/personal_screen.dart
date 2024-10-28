@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:korastudy_fe/pages/forums/post_create_screen.dart';
-import 'package:korastudy_fe/pages/forums/post_list_screen.dart';
-import 'package:korastudy_fe/pages/forums/post_search_screen.dart';
+import 'package:korastudy_fe/pages/forums/personal_post_screen.dart';
+import 'package:korastudy_fe/pages/profile/profile_screen.dart';
 
-class ForumScreen extends StatefulWidget {
-  const ForumScreen({super.key});
+class PersonalScreen extends StatelessWidget {
+  const PersonalScreen({super.key});
 
-  @override
-  State<ForumScreen> createState() => _ForumScreenState();
-}
-
-class _ForumScreenState extends State<ForumScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
-          // leading đã được loại bỏ
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
           title: Text(
-            'Forum',
+            'Cá nhân',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
@@ -27,13 +26,10 @@ class _ForumScreenState extends State<ForumScreen> {
           bottom: TabBar(
             tabs: [
               Tab(
-                text: "Forum",
+                text: "Tài khoản",
               ),
               Tab(
-                text: "Tìm kiếm",
-              ),
-              Tab(
-                text: "Tạo bài đăng",
+                text: "Bài đăng",
               ),
             ],
             labelStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -43,9 +39,8 @@ class _ForumScreenState extends State<ForumScreen> {
         ),
         body: TabBarView(
           children: [
-            PostListScreen(),
-            PostSearchScreen(),
-            PostCreateScreen(),
+            ProfileScreen(),
+            PersonalPostScreen(),
           ],
         ),
       ),

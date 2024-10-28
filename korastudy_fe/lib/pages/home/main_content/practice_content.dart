@@ -51,7 +51,9 @@ class _PracticeContentState extends State<PracticeContent> {
     return GestureDetector(
       onTap: () {
         if (title == 'Ngữ pháp') {
-          Navigator.pushNamed(context, '/grammar');
+          Navigator.pushNamed(context, '/Grammar');
+        } else if (title == 'Từ Vựng') {
+          Navigator.pushNamed(context, '/vocabulary');
         }
       },
       child: Column(

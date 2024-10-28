@@ -8,6 +8,7 @@ import 'package:korastudy_fe/pages/home/main_content/new_update_content.dart';
 import 'package:korastudy_fe/pages/home/main_content/practice_content.dart';
 import 'package:korastudy_fe/pages/profile/profile_screen.dart';
 import 'package:korastudy_fe/pages/test/test_screen.dart';
+import 'package:korastudy_fe/pages/welcome/topik_chose_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _pages = [
     HomeContent(),
     TestScreen(),
-    ForumsScreen(),
+    ForumScreen(),
     ProfileScreen(),
   ];
 
@@ -43,9 +44,16 @@ class _HomeScreenState extends State<HomeScreen> {
         child: currentScreen,
         bucket: bucket,
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {},
+      floatingActionButton: Transform.translate(
+        offset: Offset(0, 0), // Kéo nút xuống
+        child: FloatingActionButton(
+          backgroundColor: Colors.blue, // Đổi màu thành xanh
+          child: Icon(
+            Icons.add_box,
+            color: Colors.white,
+          ),
+          onPressed: () {},
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: NavBar(
@@ -66,7 +74,7 @@ class HomeContent extends StatelessWidget {
           children: [
             // AppBar-like Section with SearchComponent
             Container(
-              height: 210,
+              height: 220,
               decoration: BoxDecoration(
                 color: Color.fromRGBO(30, 165, 252, 1),
                 borderRadius: BorderRadius.only(
@@ -74,17 +82,32 @@ class HomeContent extends StatelessWidget {
                   bottomRight: Radius.circular(33),
                 ),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 35),
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 45, // Đẩy xuống bằng cách tăng padding trên
+                bottom: 20,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(
-                        Icons.menu,
-                        color: Colors.white,
-                        size: 35,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TopikChosePageWidget(),
+                            ),
+                          );
+                        },
+                        child: Icon(
+                          Icons.menu,
+                          color: Colors.white,
+                          size: 35,
+                        ),
                       ),
                       Text(
                         'TOPIK I',

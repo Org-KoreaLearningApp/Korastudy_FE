@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/pages/forums/forums_screen.dart';
 import 'package:korastudy_fe/pages/grammar/grammar_main.dart';
 import 'package:korastudy_fe/pages/home/home_screen.dart';
+import 'package:korastudy_fe/pages/vocabulary/dictionary_verb.dart';
+import 'package:korastudy_fe/pages/vocabulary/flashcard.dart';
+import 'package:korastudy_fe/pages/vocabulary/test_mix.dart';
+import 'package:korastudy_fe/pages/vocabulary/vocabulary_list.dart';
+import 'package:korastudy_fe/pages/vocabulary/vocabulary_list_mean.dart';
+import 'package:korastudy_fe/pages/welcome/splash.dart';
+import 'package:korastudy_fe/pages/welcome/topik_chose_page.dart';
+import 'package:korastudy_fe/pages/welcome/welcome_page_1.dart';
+import 'package:korastudy_fe/pages/welcome/welcome_page_2.dart';
+import 'package:korastudy_fe/pages/welcome/welcome_page_3.dart';
+import 'package:korastudy_fe/pages/welcome/welcome_page_4.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -10,51 +22,23 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MainScreen(), // Thay đổi ở đây
-    );
-  }
-}
-
-class MainScreen extends StatefulWidget {
-  @override
-  _MainScreenState createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 0;
-
-  final List<Widget> _pages = [
-    HomeScreen(),
-    GrammarMain(),
-    // Bạn có thể thêm các trang khác ở đây
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pages[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Trang chủ',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'Ngữ pháp',
-          ),
-          // Thêm các item cho các trang khác ở đây
-        ],
-        currentIndex: _currentIndex,
-        selectedItemColor: Colors.blue,
-        onTap: _onItemTapped,
-      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => SplashScreen(),
+        '/welcome1': (context) => WelcomePage1(),
+        '/welcome2': (context) => WelcomePage2(),
+        '/welcome3': (context) => WelcomePage3(),
+        '/welcome4': (context) => WelcomePage4(),
+        '/ChooseTopik': (context) => TopikChosePageWidget(),
+        '/Home': (context) => HomeScreen(),
+        '/Forum': (context) => ForumScreen(),
+        '/Grammar': (context) => const GrammarMain(),
+        '/vocabulary': (context) => Vocabulary_listWidget(),
+        '/listvoca': (context) => Vocabulary_list_meanWidget(),
+        '/dictionary': (context) => DictionaryVerbWidget(),
+        '/flashcard': (context) => FlashcardPage(),
+        '/testmixt': (context) => MatchingPage(),
+      },
     );
   }
 }
