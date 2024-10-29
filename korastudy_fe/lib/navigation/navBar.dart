@@ -54,7 +54,6 @@ class _NavBarState extends State<NavBar> {
                   height: 30,
                   onPressed: () {
                     widget.onTabSelected(1);
-                    Navigator.pushNamed(context, '/listTest');
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

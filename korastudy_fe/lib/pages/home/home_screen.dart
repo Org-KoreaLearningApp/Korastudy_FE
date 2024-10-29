@@ -7,7 +7,7 @@ import 'package:korastudy_fe/pages/home/main_content/fulltest_content.dart';
 import 'package:korastudy_fe/pages/home/main_content/new_update_content.dart';
 import 'package:korastudy_fe/pages/home/main_content/practice_content.dart';
 import 'package:korastudy_fe/pages/profile/profile_screen.dart';
-import 'package:korastudy_fe/pages/test/test_screen.dart';
+import 'package:korastudy_fe/pages/testpage/listTest.dart';
 import 'package:korastudy_fe/pages/welcome/topik_chose_page.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _pages = [
     HomeContent(),
-    TestScreen(),
+    ListTestWidget(),
     ForumScreen(),
     ProfileScreen(),
   ];
