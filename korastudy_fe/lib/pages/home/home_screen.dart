@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
         bucket: bucket,
       ),
       floatingActionButton: Transform.translate(
-        offset: Offset(0, 0),
+        offset: Offset(0, 30),
         child: FloatingActionButton(
           backgroundColor: Colors.blue,
           child: Icon(
