@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/components/totalGrammarCard_component.dart';
+import 'package:korastudy_fe/pages/grammar/grammar_list.dart';
 import 'package:korastudy_fe/widgets/search_input.dart';
 
 class GrammarMain extends StatefulWidget {
@@ -20,12 +22,14 @@ class _GrammarMainState extends State<GrammarMain> {
             SizedBox(height: 20),
             SearchInput(),
             SizedBox(height: 20),
-            _buildCategoryRow(),
+            _buildTopButtons(),
             SizedBox(height: 20),
-            _buildContentCard("Theo biểu hiện (303)",
-                "assets/images/Vocabularyremovebgpreview1.png", "1/303"),
+            TotalGrammar(
+              title: "Theo biểu hiện",
+              counterText: "0/300", // Sử dụng getter từ instance
+            ),
             SizedBox(height: 20),
-            _buildCardGrid(),
+            GrammarList() // Đưa instance vào đây
           ],
         ),
       ),
@@ -35,11 +39,10 @@ class _GrammarMainState extends State<GrammarMain> {
   Widget _buildHeader() {
     return Container(
       width: double.infinity,
-      height: 120,
+      height: 110,
       padding: EdgeInsets.only(
-          top: MediaQuery.of(context)
-              .padding
-              .top), // Adjusts for status bar height
+        top: MediaQuery.of(context).padding.top,
+      ),
       decoration: BoxDecoration(
         color: Color.fromRGBO(30, 165, 252, 1),
         boxShadow: [
@@ -59,93 +62,102 @@ class _GrammarMainState extends State<GrammarMain> {
               child: Text(
                 'Ngữ pháp',
                 style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.bold),
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
-          SizedBox(width: 48), // Placeholder to balance the layout
+          SizedBox(width: 48),
         ],
       ),
     );
   }
 
-  // Rest of your code remains unchanged...
-}
+  Widget _buildTopButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        children: [
+          Expanded(child: _buildPopupButton('Theo biểu hiện')),
+          Spacer(),
+          Expanded(
+              child: _buildCategoryButton('Bài tập', borderColor: Colors.blue)),
+        ],
+      ),
+    );
+  }
 
-Widget _buildCategoryRow() {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 8),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        _buildCategoryButton('Theo biểu hiện'),
-        _buildCategoryButton('Tiểu từ - Trợ từ - Đại từ'),
-        _buildCategoryButton('Bất quy tắc và giản lược'),
-      ],
-    ),
-  );
-}
-
-Widget _buildCategoryButton(String text) {
-  return Container(
-    padding: EdgeInsets.all(8),
-    width: 115,
-    decoration: BoxDecoration(
+  Widget _buildPopupButton(String text) {
+    return PopupMenuButton<String>(
       color: Colors.white,
-      borderRadius: BorderRadius.circular(10),
-      boxShadow: [
-        BoxShadow(color: Colors.black26, offset: Offset(0, 4), blurRadius: 4)
-      ],
-    ),
-    child: Center(
-      child: Text(text,
-          textAlign: TextAlign.center, style: TextStyle(fontSize: 16)),
-    ),
-  );
-}
+      onSelected: (value) {
+        print("Selected level: $value");
+      },
+      itemBuilder: (BuildContext context) {
+        return [
+          PopupMenuItem(
+              value: 'Theo biểu hiện',
+              child: Text('Theo biểu hiện',
+                  style: TextStyle(fontWeight: FontWeight.bold))),
+          PopupMenuItem(
+              value: 'Cấp 1',
+              child:
+                  Text('Cấp 1', style: TextStyle(fontWeight: FontWeight.bold))),
+          PopupMenuItem(
+              value: 'Cấp 2',
+              child:
+                  Text('Cấp 2', style: TextStyle(fontWeight: FontWeight.bold))),
+          PopupMenuItem(
+              value: 'Cấp 3',
+              child:
+                  Text('Cấp 3', style: TextStyle(fontWeight: FontWeight.bold))),
+        ];
+      },
+      child: Container(
+        padding: EdgeInsets.all(8),
+        width: 115,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black26, offset: Offset(0, 4), blurRadius: 4),
+          ],
+        ),
+        child: Center(
+          child: Text(text,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold)), // Đặt fontWeight ở đây
+        ),
+      ),
+    );
+  }
 
-Widget _buildContentCard(String title, String imagePath, String count) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 8),
-    child: Container(
-      padding: EdgeInsets.all(12),
-      width: double.infinity,
+  Widget _buildCategoryButton(String text,
+      {Color borderColor = Colors.transparent}) {
+    return Container(
+      padding: EdgeInsets.all(8),
+      width: 115,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: borderColor, width: 2),
         boxShadow: [
-          BoxShadow(color: Colors.black26, offset: Offset(0, 4), blurRadius: 4)
+          BoxShadow(color: Colors.black26, offset: Offset(0, 4), blurRadius: 4),
         ],
       ),
-      child: Row(
-        children: [
-          Image.asset(imagePath, width: 85, height: 85),
-          SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: TextStyle(fontSize: 20)),
-              SizedBox(height: 10),
-              Text(count, style: TextStyle(fontSize: 16)),
-            ],
-          ),
-        ],
+      child: Center(
+        child: Text(text,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold)), // Đặt fontWeight ở đây
       ),
-    ),
-  );
-}
-
-Widget _buildCardGrid() {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 8),
-    child: Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: List.generate(
-          3, (index) => _buildCategoryButton("Card ${index + 1}")),
-    ),
-  );
+    );
+  }
 }

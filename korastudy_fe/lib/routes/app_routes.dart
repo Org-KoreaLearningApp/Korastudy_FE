@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:korastudy_fe/pages/forums/forums_screen.dart';
+import 'package:korastudy_fe/pages/grammar/grammar_detail.dart';
 import 'package:korastudy_fe/pages/grammar/grammar_main.dart';
 import 'package:korastudy_fe/pages/home/home_screen.dart';
 import 'package:korastudy_fe/pages/vocabulary/dictionary_verb.dart';
@@ -36,6 +37,10 @@ class MyApp extends StatelessWidget {
         '/Home': (context) => HomeScreen(),
         '/Forum': (context) => ForumScreen(),
         '/Grammar': (context) => GrammarMain(),
+        '/GrammarDetail': (context) => GrammarDetail(
+              title: '',
+            ),
+
         '/vocabulary': (context) => Vocabulary_listWidget(),
         '/listvoca': (context) => Vocabulary_list_meanWidget(),
         '/dictionary': (context) => DictionaryVerbWidget(),
