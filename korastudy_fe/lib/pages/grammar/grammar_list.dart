@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:korastudy_fe/components/selectGrammarCard_component.dart';
+import 'package:korastudy_fe/pages/grammar/grammar_detail.dart';
 
 class GrammarList extends StatefulWidget {
   @override
@@ -18,7 +19,6 @@ class _GrammarListState extends State<GrammarList> {
     {'title': 'Suy đoán'},
   ];
 
-  // Getter để lấy tổng số card
   int get totalCards => grammarItems.length;
 
   @override
@@ -32,9 +32,8 @@ class _GrammarListState extends State<GrammarList> {
             Padding(
               padding: const EdgeInsets.only(bottom: 15.0),
               child: Row(
-                mainAxisAlignment: _getMainAxisAlignment(
-                    i), // Gọi hàm để xác định cách sắp xếp
-                children: _buildCards(i), // Gọi hàm để tạo card
+                mainAxisAlignment: _getMainAxisAlignment(i),
+                children: _buildCards(i),
               ),
             ),
         ],
@@ -42,7 +41,6 @@ class _GrammarListState extends State<GrammarList> {
     );
   }
 
-  // Hàm để xác định cách sắp xếp dựa vào số lượng card
   MainAxisAlignment _getMainAxisAlignment(int startIndex) {
     int count = 0;
     for (int j = startIndex;
@@ -59,7 +57,6 @@ class _GrammarListState extends State<GrammarList> {
     List<Widget> cards = [];
     List<double> heights = [];
 
-    // Tính chiều cao cho mỗi card
     for (int j = startIndex;
         j < startIndex + 3 && j < grammarItems.length;
         j++) {
@@ -73,33 +70,42 @@ class _GrammarListState extends State<GrammarList> {
             height: 1.5,
           ),
         ),
-        maxLines: 5, // Giới hạn số dòng
+        maxLines: 5,
         textDirection: TextDirection.ltr,
       );
-      textPainter.layout(maxWidth: 115); // Đặt chiều rộng tối đa cho text
-
-      heights.add(
-          textPainter.height + 100); // Thêm chiều cao cho hình ảnh và padding
+      textPainter.layout(maxWidth: 115);
+      heights.add(textPainter.height + 100);
     }
 
     double maxHeight =
         (heights.isNotEmpty ? heights.reduce((a, b) => a > b ? a : b) : 150) +
             12;
 
-    // Tạo danh sách các card với chiều cao bằng chiều cao tối đa
     for (int j = startIndex;
         j < startIndex + 3 && j < grammarItems.length;
         j++) {
-      cards.add(Container(
-        height: maxHeight,
-        child: SelectGrammar(
-          title: grammarItems[j]['title']!,
+      cards.add(
+        Container(
+          height: maxHeight,
+          child: SelectGrammar(
+            title: grammarItems[j]['title']!,
+            onTap: () {
+              // Điều hướng đến GrammarDetailList và truyền title
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => GrammarDetail(
+                    title: grammarItems[j]['title']!, // Truyền title vào
+                  ),
+                ),
+              );
+            },
+          ),
         ),
-      ));
+      );
 
-      // Thêm padding giữa các card nếu chỉ có 2 card trong hàng
       if (j < startIndex + 2 && j < grammarItems.length - 1) {
-        cards.add(SizedBox(width: 43)); // Thay đổi chiều rộng nếu cần
+        cards.add(SizedBox(width: 43));
       }
     }
 
