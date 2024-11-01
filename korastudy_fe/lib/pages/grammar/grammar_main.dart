@@ -26,7 +26,7 @@ class _GrammarMainState extends State<GrammarMain> {
             SizedBox(height: 20),
             TotalGrammar(
               title: "Theo biểu hiện",
-              counterText: "0/300", // Sử dụng getter từ instance
+              counterText: "0/300",
             ),
             SizedBox(height: 20),
             GrammarList() // Đưa instance vào đây
