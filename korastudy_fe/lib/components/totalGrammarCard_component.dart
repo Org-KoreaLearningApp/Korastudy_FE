@@ -39,7 +39,7 @@ class TotalGrammar extends StatelessWidget {
               height: 86,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(imagePath), // Sử dụng ảnh từ đường dẫn
+                  image: AssetImage(imagePath),
                   fit: BoxFit.fitWidth,
                 ),
               ),
@@ -55,7 +55,7 @@ class TotalGrammar extends StatelessWidget {
                 color: Color.fromRGBO(0, 0, 0, 1),
                 fontFamily: 'Inter',
                 fontSize: 20,
-                fontWeight: FontWeight.normal,
+                fontWeight: FontWeight.bold,
                 height: 1,
               ),
             ),
@@ -63,22 +63,26 @@ class TotalGrammar extends StatelessWidget {
           Positioned(
             top: 74,
             left: 124,
-            child: Container(
-              width: 78,
-              height: 28,
-              child: Center(
-                child: Text(
+            child: Row(
+              children: [
+                Icon(
+                  Icons.check,
+                  color: Colors.green,
+                  size: 24,
+                ),
+                SizedBox(width: 4),
+                Text(
                   counterText,
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     color: Color.fromRGBO(0, 0, 0, 1),
                     fontFamily: 'Inter',
-                    fontSize: 16,
+                    fontSize: 18,
                     fontWeight: FontWeight.normal,
                     height: 1,
                   ),
                 ),
-              ),
+              ],
             ),
           ),
         ],

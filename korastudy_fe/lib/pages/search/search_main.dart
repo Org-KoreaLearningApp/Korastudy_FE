@@ -7,37 +7,37 @@ class SearchScreen extends StatelessWidget {
     {
       'title': 'Ngữ Pháp',
       'subtitle': 'Tiểu từ - Trợ từ - Đại từ',
-      'imageUrl': 'assets/images/grammarLogo.jpg'
+      'imageUrl': 'assets/images/grammarlogo.jpg'
     },
     {
       'title': 'Ngữ Pháp',
       'subtitle': 'Tiểu từ - Trợ từ - Đại từ',
-      'imageUrl': 'assets/images/grammarLogo.jpg'
+      'imageUrl': 'assets/images/grammarlogo.jpg'
     },
     {
       'title': 'Ngữ Pháp',
       'subtitle': 'Tiểu từ - Trợ từ - Đại từ',
-      'imageUrl': 'assets/images/grammarLogo.jpg'
+      'imageUrl': 'assets/images/grammarlogo.jpg'
     },
     {
       'title': 'Ngữ Pháp',
       'subtitle': 'Tiểu từ - Trợ từ - Đại từ',
-      'imageUrl': 'assets/images/grammarLogo.jpg'
+      'imageUrl': 'assets/images/grammarlogo.jpg'
     },
     {
       'title': 'Ngữ Pháp',
       'subtitle': 'Tiểu từ - Trợ từ - Đại từ',
-      'imageUrl': 'assets/images/grammarLogo.jpg'
+      'imageUrl': 'assets/images/grammarlogo.jpg'
     },
     {
       'title': 'Ngữ Pháp',
       'subtitle': 'Tiểu từ - Trợ từ - Đại từ',
-      'imageUrl': 'assets/images/grammarLogo.jpg'
+      'imageUrl': 'assets/images/grammarlogo.jpg'
     },
     {
       'title': 'Ngữ Pháp',
       'subtitle': 'Tiểu từ - Trợ từ - Đại từ',
-      'imageUrl': 'assets/images/grammarLogo.jpg'
+      'imageUrl': 'assets/images/grammarlogo.jpg'
     },
   ];
 
@@ -45,8 +45,13 @@ class SearchScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tìm Kiếm',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        iconTheme: IconThemeData(
+          color: Colors.white, // Thay đổi màu của nút back thành trắng
+        ),
+        title: Text(
+          'Tìm Kiếm',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
         backgroundColor: Color(0xFF1EA5FC),
       ),

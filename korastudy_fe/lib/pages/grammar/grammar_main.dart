@@ -25,7 +25,7 @@ class _GrammarMainState extends State<GrammarMain> {
             _buildTopButtons(),
             SizedBox(height: 20),
             TotalGrammar(
-              title: "Theo biểu hiện",
+              title: "Ngữ pháp cấp độ 1",
               counterText: "0/300", // Sử dụng getter từ instance
             ),
             SizedBox(height: 20),
@@ -81,7 +81,7 @@ class _GrammarMainState extends State<GrammarMain> {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
         children: [
-          Expanded(child: _buildPopupButton('Theo biểu hiện')),
+          Expanded(child: _buildPopupButton('Cấp 1')),
           Spacer(),
           Expanded(
               child: _buildCategoryButton('Bài tập', borderColor: Colors.blue)),
@@ -98,10 +98,6 @@ class _GrammarMainState extends State<GrammarMain> {
       },
       itemBuilder: (BuildContext context) {
         return [
-          PopupMenuItem(
-              value: 'Theo biểu hiện',
-              child: Text('Theo biểu hiện',
-                  style: TextStyle(fontWeight: FontWeight.bold))),
           PopupMenuItem(
               value: 'Cấp 1',
               child:

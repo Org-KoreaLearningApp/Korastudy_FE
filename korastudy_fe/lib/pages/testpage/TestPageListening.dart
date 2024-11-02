@@ -6,27 +6,24 @@ class TestPageListening extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(30, 165, 252, 1), // Set the AppBar color
+        backgroundColor:
+            Color.fromRGBO(30, 165, 252, 1), // Set the AppBar color
         leading: IconButton(
-          icon: Text(
-            '<',
-            style: TextStyle(
-              fontSize: 24, // Set the size of the back arrow
-              fontWeight: FontWeight.bold, // Make the arrow bold
-              color: Colors.black, // Set the color of the arrow to black
-            ),
+          icon: Icon(
+            Icons.arrow_back, // Use the back arrow icon
+            color: Colors.white, // Change the color to white
           ),
           onPressed: () {
             Navigator.pop(context); // Navigate back to the previous screen
           },
         ),
-        title: Padding(
-          padding: const EdgeInsets.only(right: 40.0), // Adjust the padding to move the title to the left
+        title: Container(
           child: Text(
             'Test Page Listening',
             style: TextStyle(
               fontWeight: FontWeight.bold, // Make the text bold
-              fontSize: 20, // Make the text smaller
+              fontSize: 24, // Make the text smaller
+              color: Colors.white, // Change the color to white
             ),
           ),
         ),
@@ -113,7 +110,8 @@ class TestPageListening extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: Colors.black, width: 0.7), // Keep the border for <보기>
+        border: Border.all(
+            color: Colors.black, width: 0.7), // Keep the border for <보기>
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,7 +206,9 @@ class TestPageListening extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => TestPageChooseWidget()), // Navigate to TestPageChoose
+            MaterialPageRoute(
+                builder: (context) =>
+                    TestPageChooseWidget()), // Navigate to TestPageChoose
           );
         },
         style: ElevatedButton.styleFrom(
