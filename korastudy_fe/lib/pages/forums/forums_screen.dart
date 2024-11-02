@@ -17,7 +17,6 @@ class _ForumScreenState extends State<ForumScreen> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          // leading đã được loại bỏ
           title: Text(
             'Forum',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),

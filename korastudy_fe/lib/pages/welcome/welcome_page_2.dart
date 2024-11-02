@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/pages/account/login/login_screen.dart';
 import 'package:korastudy_fe/pages/welcome/topik_chose_page.dart';
 import 'package:korastudy_fe/pages/welcome/welcome_page_3.dart';
 
@@ -81,7 +82,13 @@ class WelcomePage2 extends StatelessWidget {
                         vertical: screenHeight * 0.02),
                   ),
                   onPressed: () {
-                    // Add navigation logic for "Đăng Nhập"
+                    // Chuyển hướng sang trang đăng nhập
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginScreen(), // Trang đăng nhập
+                      ),
+                    );
                   },
                   child: Text(
                     'Đăng Nhập / Đăng Ký',

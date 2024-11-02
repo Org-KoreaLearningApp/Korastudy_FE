@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/pages/home/home_screen.dart';
 import 'package:korastudy_fe/widgets/login_input.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -13,13 +14,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(
-          Icons.arrow_back,
-          color: Colors.white,
-        ),
-        title: Text(
-          'Đăng ký',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
+          },
         ),
         centerTitle: true,
         backgroundColor: Color(0xFF1EA5FC),
@@ -141,11 +146,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             SizedBox(
                               width: 8,
                             ),
-                            Text(
-                              "Đăng nhập",
-                              style: TextStyle(
-                                color: Color(0xFF1EA5FC),
-                                decoration: TextDecoration.underline,
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => RegisterScreen(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Đăng nhập",
+                                style: TextStyle(
+                                  color: Color(0xFF1EA5FC),
+                                  decoration: TextDecoration.underline,
+                                ),
                               ),
                             ),
                           ],

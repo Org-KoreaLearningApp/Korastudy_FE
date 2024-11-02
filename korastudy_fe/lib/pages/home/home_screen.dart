@@ -7,7 +7,7 @@ import 'package:korastudy_fe/pages/home/main_content/fulltest_content.dart';
 import 'package:korastudy_fe/pages/home/main_content/new_update_content.dart';
 import 'package:korastudy_fe/pages/home/main_content/practice_content.dart';
 import 'package:korastudy_fe/pages/profile/profile_screen.dart';
-import 'package:korastudy_fe/pages/testpage/listTest.dart';
+import 'package:korastudy_fe/pages/testpage/ListTest.dart';
 import 'package:korastudy_fe/pages/welcome/topik_chose_page.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -45,9 +45,9 @@ class _HomeScreenState extends State<HomeScreen> {
         bucket: bucket,
       ),
       floatingActionButton: Transform.translate(
-        offset: Offset(0, 0), // Kéo nút xuống
+        offset: Offset(0, 30),
         child: FloatingActionButton(
-          backgroundColor: Colors.blue, // Đổi màu thành xanh
+          backgroundColor: Colors.blue,
           child: Icon(
             Icons.add_box,
             color: Colors.white,

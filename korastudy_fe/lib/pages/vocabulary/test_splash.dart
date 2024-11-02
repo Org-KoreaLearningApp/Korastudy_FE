@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/pages/vocabulary/test_mix.dart';
 
 class TestPage extends StatelessWidget {
   @override
@@ -21,7 +22,8 @@ class TestPage extends StatelessWidget {
             // Image of the girl
             Image.asset(
               'assets/images/girl_studying.png', // Replace with your image path
-              height: 200,
+              height: 300,
+              width: 300,
             ),
             SizedBox(height: 16),
 
@@ -138,6 +140,12 @@ class TestPage extends StatelessWidget {
               ),
               onPressed: () {
                 // Add your onPressed code here!
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          MatchingPage()), // Replace with your next page
+                );
               },
               child: Text(
                 'Bắt đầu nào',

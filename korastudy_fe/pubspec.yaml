@@ -69,6 +69,7 @@ flutter:
   assets:
     - assets/images/
     - assets/svg/
+    - assets\images\logo.png
     - assets\images\background.png
     - assets\images\Koreanlearn.png
     - assets\images\Koreanlearn2.png

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:korastudy_fe/pages/forums/personal_post_screen.dart';
+import 'package:korastudy_fe/pages/personal/personal_post_screen.dart';
 import 'package:korastudy_fe/pages/profile/profile_screen.dart';
 
 class PersonalScreen extends StatelessWidget {
