@@ -110,7 +110,8 @@ class TestPage extends StatelessWidget {
                       color: Colors.black,
                     ),
                     underline: SizedBox(), // Removes the underline
-                    items: <String>['10', '20', '30', '40'].map<DropdownMenuItem<String>>((String value) {
+                    items: <String>['10', '20', '30', '40']
+                        .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
