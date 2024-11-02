@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:korastudy_fe/pages/forums/forums_screen.dart';
+import 'package:korastudy_fe/pages/grammar/grammar_detail.dart';
 import 'package:korastudy_fe/pages/grammar/grammar_main.dart';
 import 'package:korastudy_fe/pages/home/home_screen.dart';
 import 'package:korastudy_fe/pages/search/search_main.dart';
@@ -40,13 +41,15 @@ class MyApp extends StatelessWidget {
         '/ChooseTopik': (context) => TopikChosePageWidget(),
         '/Home': (context) => HomeScreen(),
         '/Forum': (context) => ForumScreen(),
-        '/Grammar': (context) => const GrammarMain(),
+        '/Grammar': (context) => GrammarMain(),
+        '/GrammarDetail': (context) => GrammarDetail(
+              title: '',
+            ),
         '/vocabulary': (context) => Vocabulary_listWidget(),
         '/listvoca': (context) => Vocabulary_list_meanWidget(),
         '/dictionary': (context) => DictionaryVerbWidget(),
         '/flashcard': (context) => FlashcardPage(),
         '/testmixt': (context) => MatchingPage(),
-        '/search': (context) => SearchScreen(),
         '/listTest': (context) =>
             list_test.ListTestWidget(), // Thêm route cho ListTestWidget
         '/testPageListening': (context) =>

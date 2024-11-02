@@ -52,7 +52,9 @@ class _NavBarState extends State<NavBar> {
                 MaterialButton(
                   minWidth: 30,
                   height: 30,
-                  onPressed: () => widget.onTabSelected(1),
+                  onPressed: () {
+                    widget.onTabSelected(1);
+                  },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
