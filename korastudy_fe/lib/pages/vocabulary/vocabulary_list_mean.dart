@@ -1,192 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/widgets/note_dialog.dart';
 
 class Vocabulary_list_meanWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 390,
-      height: 844,
-      decoration: BoxDecoration(
-        color: Color.fromRGBO(255, 255, 255, 1),
-      ),
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-            top: -86,
-            left: -107,
-            child: Container(
-              width: 234,
-              height: 209,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.elliptical(234, 209)),
-              ),
-            ),
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromRGBO(70, 160, 229, 1),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            size: 30,
+            color: Colors.white,
           ),
-          Positioned(
-            top: 44,
-            left: 0,
-            child: Container(
-              width: 400,
-              height: 57,
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromRGBO(0, 0, 0, 0.25),
-                    offset: Offset(0, 4),
-                    blurRadius: 4,
-                  ),
-                ],
-                color: Color.fromRGBO(94, 186, 217, 1),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.white),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  Text(
-                    'Từ Vựng',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Color.fromRGBO(255, 255, 255, 1),
-                      fontFamily: 'Inter',
-                      fontSize: 20,
-                      letterSpacing: -0.3,
-                      fontWeight: FontWeight.bold,
-                      height: 1,
-                    ),
-                  ),
-                  SizedBox(width: 48), // Placeholder to balance the row
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            top: 119,
-            left: 0,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  buildButton('Định nghĩa', 17),
-                  SizedBox(width: 20),
-                  buildButton('Chọn từ ', 24.5),
-                  SizedBox(width: 20),
-                  buildButton('Game', 33),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            top: 165,
-            left: 0,
-            child: Container(
-              width: 390,
-              height: 580, // Adjust height to fit within the screen
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 9, vertical: 19),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Center(child: buildVocabularyCard('오이', 'Quả dưa chuột')),
-                      SizedBox(height: 10),
-                      Center(child: buildVocabularyCard('사과', 'Quả táo')),
-                      SizedBox(height: 10),
-                      Center(child: buildVocabularyCard('바나나', 'Quả chuối')),
-                      SizedBox(height: 10),
-                      Center(child: buildVocabularyCard('포도', 'Quả nho')),
-                      // Add more vocabulary cards as needed
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 730,
-            left: 20,
-            child: Container(
-              width: 390,
-              height: 88,
-              child: Stack(
-                children: <Widget>[
-                  Positioned(
-                    top: 20,
-                    left: 95,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        color: Color.fromRGBO(30, 165, 252, 1),
-                      ),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text(
-                            'Kiểm tra ',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: Color.fromRGBO(255, 255, 255, 1),
-                              fontFamily: 'Inter',
-                              fontSize: 16,
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.bold,
-                              height: 1,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget buildButton(String text, double leftPadding) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.black,
-        backgroundColor: Colors.white,
-        shadowColor: Colors.black.withOpacity(0.25),
-        elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        padding: EdgeInsets.symmetric(horizontal: leftPadding, vertical: 11),
+        title: Text(
+          'Danh sách từ vựng',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
       ),
-      onPressed: () {
-        // Define button action here
-      },
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Color.fromRGBO(0, 0, 0, 1),
-          fontFamily: 'Inter',
-          fontSize: 16,
-          letterSpacing: -0.3,
-          fontWeight: FontWeight.bold,
-          height: 1,
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            buildVocabularyCard(
+                '한국', 'Korea', screenWidth, screenHeight, context),
+            SizedBox(height: screenHeight * 0.02),
+            buildVocabularyCard(
+                '베트남', 'Vietnam', screenWidth, screenHeight, context),
+            SizedBox(height: screenHeight * 0.02),
+            buildVocabularyCard(
+                '미국', 'USA', screenWidth, screenHeight, context),
+            SizedBox(height: screenHeight * 0.02),
+            buildVocabularyCard('영국', 'UK', screenWidth, screenHeight, context),
+            SizedBox(height: screenHeight * 0.02),
+            buildVocabularyCard('영국', 'UK', screenWidth, screenHeight, context),
+            SizedBox(height: screenHeight * 0.02),
+            buildVocabularyCard('영국', 'UK', screenWidth, screenHeight, context),
+            SizedBox(height: screenHeight * 0.02),
+            buildVocabularyCard('영국', 'UK', screenWidth, screenHeight, context),
+            SizedBox(height: screenHeight * 0.02),
+            buildVocabularyCard('영국', 'UK', screenWidth, screenHeight, context),
+            SizedBox(height: screenHeight * 0.02),
+            buildVocabularyCard('영국', 'UK', screenWidth, screenHeight, context),
+            SizedBox(height: screenHeight * 0.02),
+          ],
         ),
       ),
     );
   }
 
-  Widget buildVocabularyCard(String word, String meaning) {
+  Widget buildVocabularyCard(String word, String meaning, double screenWidth,
+      double screenHeight, BuildContext context) {
     return Container(
-      width: 372,
-      height: 133,
+      width: screenWidth * 0.95,
+      height: screenHeight * 0.16,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
@@ -204,20 +82,20 @@ class Vocabulary_list_meanWidget extends StatelessWidget {
             top: 0,
             left: 0,
             child: Container(
-              width: 67,
-              height: 133,
+              width: screenWidth * 0.17,
+              height: screenHeight * 0.16,
               child: Stack(
                 children: <Widget>[
                   Positioned(
-                    top: 41,
-                    left: 9,
+                    top: screenHeight * 0.05,
+                    left: screenWidth * 0.02,
                     child: Container(
-                      width: 50,
-                      height: 50,
+                      width: screenWidth * 0.13,
+                      height: screenWidth * 0.13,
                       decoration: BoxDecoration(
                         color: Color.fromRGBO(94, 186, 217, 1),
-                        borderRadius:
-                            BorderRadius.all(Radius.elliptical(50, 50)),
+                        borderRadius: BorderRadius.all(Radius.elliptical(
+                            screenWidth * 0.13, screenWidth * 0.13)),
                       ),
                       child: Icon(Icons.volume_up,
                           color: Colors.white), // Speaker icon
@@ -229,24 +107,26 @@ class Vocabulary_list_meanWidget extends StatelessWidget {
           ),
           Positioned(
             top: 0,
-            left: 305,
+            left: screenWidth * 0.78,
             child: Container(
-              width: 67,
-              height: 133,
+              width: screenWidth * 0.17,
+              height: screenHeight * 0.16,
               child: Icon(Icons.favorite_border,
-                  color: Colors.black, size: 30), // Team icon
+                  color: Colors.black, size: screenWidth * 0.08), // Team icon
             ),
           ),
           Positioned(
             top: 0,
-            left: 67,
+            left: screenWidth * 0.17,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 0, vertical: 35),
+              padding: EdgeInsets.symmetric(
+                  horizontal: 0, vertical: screenHeight * 0.04),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 7, vertical: 0),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.02, vertical: 0),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -256,7 +136,7 @@ class Vocabulary_list_meanWidget extends StatelessWidget {
                           style: TextStyle(
                             color: Color.fromRGBO(0, 0, 0, 1),
                             fontFamily: 'Inter',
-                            fontSize: 20,
+                            fontSize: screenWidth * 0.05,
                             letterSpacing: -0.3,
                             fontWeight: FontWeight.bold,
                             height: 1,
@@ -265,9 +145,11 @@ class Vocabulary_list_meanWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 5),
+                  SizedBox(height: screenHeight * 0.005),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.02,
+                        vertical: screenHeight * 0.005),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -277,7 +159,7 @@ class Vocabulary_list_meanWidget extends StatelessWidget {
                           style: TextStyle(
                             color: Color.fromRGBO(0, 0, 0, 1),
                             fontFamily: 'Inter',
-                            fontSize: 16,
+                            fontSize: screenWidth * 0.04,
                             letterSpacing: -0.3,
                             fontWeight: FontWeight.bold,
                             height: 1,
@@ -286,26 +168,36 @@ class Vocabulary_list_meanWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 5),
+                  SizedBox(height: screenHeight * 0.005),
                   Container(
-                    width: 238,
-                    height: 27,
+                    width: screenWidth * 0.6,
+                    height: screenHeight * 0.05,
                     child: Stack(
                       children: <Widget>[
                         Positioned(
-                          top: 4,
-                          left: 4,
-                          child: Text(
-                            'Thêm ghi chú',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Color.fromRGBO(0, 0, 0, 1),
-                              fontFamily: 'Inter',
-                              fontSize: 16,
-                              letterSpacing: -0.3,
-                              fontWeight: FontWeight.bold,
-                              height: 1,
-                              decoration: TextDecoration.underline,
+                          top: screenHeight * 0.005,
+                          left: screenWidth * 0.01,
+                          child: TextButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return NoteDialog();
+                                },
+                              );
+                            },
+                            child: Text(
+                              'Thêm ghi chú',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Color.fromRGBO(0, 0, 0, 1),
+                                fontFamily: 'Inter',
+                                fontSize: screenWidth * 0.04,
+                                letterSpacing: -0.3,
+                                fontWeight: FontWeight.bold,
+                                height: 1,
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
                           ),
                         ),
