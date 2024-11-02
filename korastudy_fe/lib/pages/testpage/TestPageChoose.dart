@@ -60,13 +60,15 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size; // Lấy kích thước màn hình
+
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(80.0), // Điều chỉnh chiều cao của AppBar
+          preferredSize: Size.fromHeight(80.0),
           child: AppBar(
-            backgroundColor: Color.fromRGBO(30, 165, 252, 1), // Đặt màu AppBar
+            backgroundColor: Color.fromRGBO(30, 165, 252, 1),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -75,7 +77,7 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
                     Text(
                       'Câu ${_currentPage + 1}',
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.white, // Đổi thành màu trắng
                         fontFamily: 'Inter',
                         fontSize: 20,
                         fontWeight: FontWeight.normal,
@@ -85,12 +87,13 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
                 ),
                 Row(
                   children: [
-                    Icon(Icons.access_time, color: Colors.black, size: 16), // Icon đồng hồ nhỏ
+                    Icon(Icons.access_time,
+                        color: Colors.white, size: 16), // Đổi thành màu trắng
                     SizedBox(width: 4),
                     Text(
                       '00:32',
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.white, // Đổi thành màu trắng
                         fontFamily: 'Inter',
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
@@ -100,12 +103,14 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
                 ),
               ],
             ),
-            centerTitle: false, // Căn trái tiêu đề
+            centerTitle: false,
+            iconTheme:
+                IconThemeData(color: Colors.white), // Đổi màu sắc nút back
           ),
         ),
         body: Container(
-          width: 390,
-          height: 844,
+          width: screenSize.width,
+          height: screenSize.height,
           color: Colors.white,
           child: Column(
             children: [
@@ -113,8 +118,11 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
               Expanded(
                 child: PageView(
                   controller: _pageController,
-                  physics: NeverScrollableScrollPhysics(), // Ngăn người dùng cuộn thủ công
-                  children: List.generate(_totalPages, (index) => _buildQuestionBox(index + 1)),
+                  physics: NeverScrollableScrollPhysics(),
+                  children: List.generate(
+                    _totalPages,
+                    (index) => _buildQuestionBox(index + 1, screenSize),
+                  ),
                 ),
               ),
             ],
@@ -126,11 +134,11 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
 
   Widget _buildProgressBar() {
     return Container(
-      width: 390,
+      width: double.infinity,
       height: 7,
       color: Color.fromRGBO(158, 205, 221, 1),
       child: FractionallySizedBox(
-        widthFactor: (_currentPage + 1) / _totalPages, // Tỷ lệ chiều rộng
+        widthFactor: (_currentPage + 1) / _totalPages,
         child: Container(
           color: Color.fromRGBO(63, 204, 251, 1),
         ),
@@ -138,10 +146,11 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
     );
   }
 
-  Widget _buildQuestionBox(int questionNumber) {
+  Widget _buildQuestionBox(int questionNumber, Size screenSize) {
     return Container(
       margin: EdgeInsets.only(top: 65),
-      width: 344,
+      width: screenSize.width * 0.9, // Chiếm 90% chiều rộng màn hình
+      padding: EdgeInsets.symmetric(horizontal: 16), // Thêm padding
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
@@ -164,7 +173,7 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
 
   Widget _buildQuestionHeader(int questionNumber) {
     return Container(
-      width: 344,
+      width: double.infinity,
       height: 89,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.vertical(top: Radius.circular(10)),

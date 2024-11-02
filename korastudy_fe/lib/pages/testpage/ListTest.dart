@@ -1,42 +1,35 @@
 import 'package:flutter/material.dart';
-import 'TestPageListening.dart'; // Ensure this import is correct
 
 class ListTestWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          color: Color.fromRGBO(255, 255, 255, 1),
-        ),
-        child: Column(
-          children: <Widget>[
-            _buildHeader(),
-            _buildContent(context),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      width: double.infinity,
-      height: 97,
-      color: Color.fromRGBO(30, 165, 252, 1),
-      child: Center(
-        child: Text(
+      appBar: AppBar(
+        automaticallyImplyLeading: false, // Bỏ nút back
+        backgroundColor: Color.fromRGBO(30, 165, 252, 1),
+        title: Text(
           'Danh sách bài thi',
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white, // Đổi màu chữ thành màu trắng
             fontFamily: 'Inter',
-            fontSize: 20,
+            fontSize: 24,
             fontWeight: FontWeight.bold,
-            height: 1,
-            decoration: TextDecoration.none,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: SafeArea(
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(255, 255, 255, 1),
+          ),
+          child: Column(
+            children: <Widget>[
+              _buildContent(context),
+            ],
           ),
         ),
       ),
@@ -76,12 +69,13 @@ class ListTestWidget extends StatelessWidget {
         children: <Widget>[
           Container(
             width: double.infinity,
-            height: 117,
+            height: 150, // Tăng chiều cao của hình ảnh
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
-                image: AssetImage('assets/images/Learnnew3.png'),
-                fit: BoxFit.fitWidth,
+                image: AssetImage('assets/images/Learnnew3.jpg'),
+                fit: BoxFit
+                    .cover, // Thay đổi fit thành cover để hình ảnh lấp đầy khung
               ),
             ),
           ),
@@ -125,30 +119,30 @@ class ListTestWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16),
-             ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/testPageListening'); // Navigate to TestPageListening
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromRGBO(30, 165, 252, 1),
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              child: Text(
-                'Bắt đầu',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color.fromRGBO(245, 245, 245, 1),
-                  fontFamily: 'Inter',
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  height: 1.5,
-                ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context,
+                  '/testPageListening'); // Navigate to TestPageListening
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color.fromRGBO(30, 165, 252, 1),
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
               ),
             ),
-          
+            child: Text(
+              'Bắt đầu',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color.fromRGBO(245, 245, 245, 1),
+                fontFamily: 'Inter',
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                height: 1.5,
+              ),
+            ),
+          ),
         ],
       ),
     );

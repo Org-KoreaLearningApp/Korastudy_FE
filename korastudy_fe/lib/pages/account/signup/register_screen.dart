@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/pages/account/login/login_screen.dart';
 import 'package:korastudy_fe/pages/home/home_screen.dart';
 import 'package:korastudy_fe/widgets/login_input.dart';
 
@@ -151,7 +152,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => RegisterScreen(),
+                                    builder: (context) => LoginScreen(),
                                   ),
                                 );
                               },

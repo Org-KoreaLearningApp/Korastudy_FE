@@ -11,16 +11,16 @@ class Vocabulary_listWidget extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Từ Vựng',
-          textAlign: TextAlign.center,
           style: TextStyle(
             color: Color.fromRGBO(255, 255, 255, 1),
             fontFamily: 'Inter',
-            fontSize: 20,
+            fontSize: 24,
             letterSpacing: -0.3,
             fontWeight: FontWeight.bold,
             height: 1,
           ),
         ),
+        centerTitle: true, // Căn giữa tiêu đề
         backgroundColor: Color.fromRGBO(30, 165, 252, 1),
         leading: IconButton(
           icon: Icon(
@@ -29,7 +29,7 @@ class Vocabulary_listWidget extends StatelessWidget {
             color: Color.fromRGBO(255, 255, 255, 1),
           ),
           onPressed: () {
-            // Add your onPressed code here!
+            Navigator.pop(context);
           },
         ),
         actions: <Widget>[
@@ -40,12 +40,11 @@ class Vocabulary_listWidget extends StatelessWidget {
               color: Color.fromRGBO(255, 255, 255, 1),
             ),
             onPressed: () {
-              // Add your onPressed code here!
               Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        DictionaryVerbWidget()), // Replace with your next page
+                        DictionaryVerbWidget()), // Trang tiếp theo
               );
             },
           ),
