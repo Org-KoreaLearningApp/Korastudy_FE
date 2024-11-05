@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/pages/account/login/login_screen.dart';
 import 'package:korastudy_fe/widgets/login_input.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -13,9 +14,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(
-          Icons.arrow_back,
-          color: Colors.white,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LoginScreen()),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
         ),
         title: Text(
           'Đăng ký',
@@ -99,15 +108,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 "Đăng ký",
                                 style: TextStyle(
                                   color: Colors.white,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      // SizedBox(
+                      //   height: 10,
+                      // ),
                       Row(
                         children: [
                           Expanded(
@@ -117,11 +127,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 "Đăng nhập bằng Google",
                                 style: TextStyle(
                                   color: Colors.black,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              icon: Icon(
-                                Icons.person,
-                                color: Colors.black,
+                              icon: Image.asset(
+                                'assets/images/google-icon-notbg.png',
+                                width: 20,
+                                height: 20,
                               ),
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xFFEEEEEE),
@@ -130,22 +142,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           )
                         ],
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
+                      // SizedBox(
+                      //   height: 20,
+                      // ),
                       Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text("Bạn đã có tài khoản?"),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              "Đăng nhập",
-                              style: TextStyle(
-                                color: Color(0xFF1EA5FC),
-                                decoration: TextDecoration.underline,
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginScreen()),
+                                );
+                              },
+                              child: Text(
+                                "Đăng nhập",
+                                style: TextStyle(
+                                  color: Color(0xFF1EA5FC),
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: Color(0xFF1EA5FC),
+                                  decorationThickness: 2,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
                               ),
                             ),
                           ],

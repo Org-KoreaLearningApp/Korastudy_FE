@@ -34,6 +34,8 @@ dependencies:
   persistent_bottom_nav_bar: ^6.2.1
   shared_preferences: ^2.3.2
   flutter_svg: ^2.0.10+1
+  font_awesome_flutter: ^10.4.0
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -77,6 +79,7 @@ flutter:
     - assets\images\Koreanlearn4.png
     - assets\images\topik_chose_page.png
     - assets\images\vocab.png
+    - assets\images\google-icon-notbg.png
     # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/pages/account/login/login_screen.dart';
 import 'package:korastudy_fe/pages/forums/forums_screen.dart';
 import 'package:korastudy_fe/pages/grammar/grammar_main.dart';
 import 'package:korastudy_fe/pages/home/home_screen.dart';
@@ -14,7 +15,8 @@ import 'package:korastudy_fe/pages/welcome/welcome_page_2.dart';
 import 'package:korastudy_fe/pages/welcome/welcome_page_3.dart';
 import 'package:korastudy_fe/pages/welcome/welcome_page_4.dart';
 import 'package:korastudy_fe/routes/app_routes.dart';
-import 'package:korastudy_fe/pages/testpage/listTest.dart' as list_test; // Import đúng cho ListTestWidget
+import 'package:korastudy_fe/pages/testpage/listTest.dart'
+    as list_test; // Import đúng cho ListTestWidget
 import 'package:korastudy_fe/pages/testpage/TestPageListening.dart'; // Import đúng cho TestPageListening
 
 void main() async {
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "KoraStudy App",
-      home: SplashScreen(),
+      home: LoginScreen(),
       routes: {
         '/welcome1': (context) => WelcomePage1(),
         '/welcome2': (context) => WelcomePage2(),
@@ -44,8 +46,10 @@ class MyApp extends StatelessWidget {
         '/dictionary': (context) => DictionaryVerbWidget(),
         '/flashcard': (context) => FlashcardPage(),
         '/testmixt': (context) => MatchingPage(),
-        '/listTest': (context) => list_test.ListTestWidget(), // Thêm route cho ListTestWidget
-        '/testPageListening': (context) => TestPageListening(), // Thêm route cho TestPageListening
+        '/listTest': (context) =>
+            list_test.ListTestWidget(), // Thêm route cho ListTestWidget
+        '/testPageListening': (context) =>
+            TestPageListening(), // Thêm route cho TestPageListening
       },
     );
   }
