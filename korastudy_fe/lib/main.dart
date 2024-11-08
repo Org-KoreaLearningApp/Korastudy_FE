@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/firebase_options.dart';
 import 'package:korastudy_fe/pages/account/login/login_screen.dart';
 import 'package:korastudy_fe/pages/account/signup/register_screen.dart';
 import 'package:korastudy_fe/pages/forums/forums_screen.dart';
@@ -29,6 +30,9 @@ import 'package:firebase_core/firebase_core.dart';
 // }
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+   await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 

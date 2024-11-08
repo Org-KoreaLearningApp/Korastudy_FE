@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/pages/account/signup/register_screen.dart';
+import 'package:korastudy_fe/services/auth_service.dart';
 import 'package:korastudy_fe/widgets/login_input.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -9,6 +11,28 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final AuthService _authService = AuthService();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passController = TextEditingController();
+
+  void login() async {
+    var user = await _authService.login(
+      _emailController.text.trim(),
+      _passController.text.trim(),
+    );
+    if (user != null) {
+      print(user.toString());
+    }
+  }
+
+  void loginByGoogle() async {
+    var user = await _authService.loginByGoogle();
+    if (user != null)
+      print(user.toString());
+    else
+      print("Error in sign in with google");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,13 +65,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 16.0,
                 ),
                 Container(
-                  child: LoginInput(label: "Email", icon: Icons.email),
+                  child: LoginInput(
+                    label: "Email",
+                    icon: Icons.email,
+                    controller: _emailController,
+                  ),
                 ),
                 SizedBox(
                   height: 10.0,
                 ),
                 Container(
-                  child: LoginInput(label: "Mật khẩu", icon: Icons.lock),
+                  child: LoginInput(
+                    label: "Mật khẩu",
+                    icon: Icons.lock,
+                    controller: _passController,
+                  ),
                 ),
                 SizedBox(
                   height: 20.0,
@@ -91,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Expanded(
                       child: ElevatedButton.icon(
-                        onPressed: () {},
+                        onPressed: loginByGoogle,
                         label: Text(
                           "Đăng nhập bằng Google",
                           style: TextStyle(
@@ -119,13 +151,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(
                         width: 8,
                       ),
-                      Text(
-                        "Đăng ký",
-                        style: TextStyle(
-                          color: Color(0xFF1EA5FC),
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
+                      GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RegisterScreen(),
+                          ),
+                        );
+                      },
+                      )
                     ],
                   ),
                 ),
