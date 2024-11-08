@@ -1,4 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/pages/account/login/login_screen.dart';
+import 'package:korastudy_fe/pages/home/home_screen.dart';
+import 'package:korastudy_fe/services/secure_storage_service.dart';
 import 'package:korastudy_fe/widgets/login_input.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -9,13 +14,120 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _repasswordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final SecureStorageService _secureStorageService = SecureStorageService();
+
+  bool _saveAccount = false;
+  String _errorText = "";
+
+  bool validateInput() {
+    bool checkout = true;
+    String pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+    RegExp regExp = RegExp(pattern);
+    setState(() {
+      if (_nameController.text.isEmpty ||
+          _emailController.text.isEmpty ||
+          _passwordController.text.isEmpty ||
+          _repasswordController.text.isEmpty) {
+        _errorText = 'Vui lòng nhập đủ dữ liệu';
+        checkout = false;
+      } else if (!regExp.hasMatch(_emailController.text.trim())) {
+        _errorText = 'Vui lòng nhập đúng định dạng email ten@gmail.com';
+        checkout = false;
+      } else if (_passwordController.text.length < 6) {
+        _errorText = 'Mật khẩu phải có ít nhất 6 ký tự';
+        checkout = false;
+      } else if (_repasswordController.text.length < 6) {
+        _errorText = 'Mật khẩu xác nhận phải có ít nhất 6 ký tự';
+        checkout = false;
+      } else if (_passwordController.text.trim() !=
+          _repasswordController.text.trim()) {
+        _errorText = 'Mật khẩu xác nhận không đúng';
+        checkout = false;
+      }
+    });
+    return checkout;
+  }
+
+  Future<void> _register() async {
+    bool checkout = validateInput();
+    if (checkout) {
+      try {
+        // Register user with email and password
+        UserCredential userCredential =
+            await _auth.createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+
+        DateTime now = DateTime.now();
+
+        // After successful registration, save additional user data to Firestore
+        await _firestore.collection('users').doc(userCredential.user?.uid).set({
+          'name': _nameController.text.trim(),
+          'email': _emailController.text.trim(),
+          'birthday': "${now.year}-${now.month}-${now.day}",
+        });
+
+        // // Retrieve the user document from Firestore after registration
+        // DocumentSnapshot userDoc = await _firestore
+        //     .collection('users')
+        //     .doc(userCredential.user?.uid)
+        //     .get();
+
+        // if (userDoc.exists) {
+        //   // Safely retrieve the data from Firestore and cast it correctly
+        //   var userData = userDoc.data() as Map<String, dynamic>;
+
+        //   // Optionally print or use the data
+        //   print('User name: ${userData['name']}');
+        //   print('User email: ${userData['email']}');
+        //   print('Created At: ${userData['createdAt']}');
+        // }
+
+        // Show success message
+        if (_saveAccount == true) {
+          _secureStorageService.saveCredentials(
+            _emailController.text.trim(),
+            _passwordController.text.trim(),
+          );
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Registration successful!')),
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+
+        // Navigate to home or login screen
+      } catch (e) {
+        print('Registration failed: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Registration failed: ${e.toString()}')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(
-          Icons.arrow_back,
-          color: Colors.white,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
         ),
         title: Text(
           'Đăng ký',
@@ -40,30 +152,61 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       SizedBox(
                         height: 16.0,
                       ),
-                      Container(
-                        child:
-                            LoginInput(label: "Nhập tên", icon: Icons.person),
-                      ),
+                      if (_errorText.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Text(
+                            _errorText,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
                       SizedBox(
-                        height: 10.0,
+                        height: 15.0,
                       ),
                       Container(
-                        child:
-                            LoginInput(label: "Nhập email", icon: Icons.email),
+                        child: LoginInput(
+                          label: "Nhập tên",
+                          icon: Icons.person,
+                          controller: _nameController,
+                        ),
                       ),
                       SizedBox(
                         height: 10.0,
                       ),
                       Container(
                         child: LoginInput(
-                            label: "Nhập mật khẩu", icon: Icons.lock),
+                          label: "Nhập email",
+                          icon: Icons.email,
+                          controller: _emailController,
+                        ),
                       ),
                       SizedBox(
                         height: 10.0,
                       ),
                       Container(
-                        child: LoginInput(
-                            label: "Xác nhận mật khẩu", icon: Icons.lock),
+                        child: TextField(
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            labelText: "Mật khẩu",
+                            suffixIcon: Icon(Icons.lock),
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: _passwordController,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        child: TextField(
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            labelText: "Nhập lại mật khẩu",
+                            suffixIcon: Icon(Icons.lock),
+                            border: OutlineInputBorder(),
+                          ),
+                          controller: _repasswordController,
+                        ),
                       ),
                       SizedBox(
                         height: 20.0,
@@ -72,8 +215,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Checkbox(
-                            value: true,
-                            onChanged: (bool? value) {},
+                            value: _saveAccount,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _saveAccount = value ?? false;
+                              });
+                            },
                             activeColor: Colors.black,
                           ),
                           Text(
@@ -94,7 +241,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 elevation: 5,
                                 shadowColor: Colors.black,
                               ),
-                              onPressed: () {},
+                              onPressed: _register,
                               child: Text(
                                 "Đăng ký",
                                 style: TextStyle(
@@ -138,14 +285,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text("Bạn đã có tài khoản?"),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              "Đăng nhập",
-                              style: TextStyle(
-                                color: Color(0xFF1EA5FC),
-                                decoration: TextDecoration.underline,
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginScreen()),
+                                );
+                              },
+                              child: Text(
+                                "Đăng nhập",
+                                style: TextStyle(
+                                  color: Color(0xFF1EA5FC),
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: Color(0xFF1EA5FC),
+                                  decorationThickness: 2,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
                               ),
                             ),
                           ],
