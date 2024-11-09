@@ -1,10 +1,32 @@
 import 'package:flutter/material.dart';
-// Ensure this import is correct
+import 'package:korastudy_fe/pages/home/home_screen.dart'; // Thêm dòng import này
 
 class ListTestWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromRGBO(30, 165, 252, 1),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
+          },
+        ),
+        title: Text(
+          'Danh sách bài thi',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Inter',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+      ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -13,31 +35,8 @@ class ListTestWidget extends StatelessWidget {
         ),
         child: Column(
           children: <Widget>[
-            _buildHeader(),
             _buildContent(context),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      width: double.infinity,
-      height: 97,
-      color: Color.fromRGBO(30, 165, 252, 1),
-      child: Center(
-        child: Text(
-          'Danh sách bài thi',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.black,
-            fontFamily: 'Inter',
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            height: 1,
-            decoration: TextDecoration.none,
-          ),
         ),
       ),
     );
@@ -80,7 +79,7 @@ class ListTestWidget extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
-                image: AssetImage('assets/images/Learnnew3.png'),
+                image: AssetImage('assets/images/user3.jpg'),
                 fit: BoxFit.fitWidth,
               ),
             ),
@@ -125,30 +124,29 @@ class ListTestWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16),
-             ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/testPageListening'); // Navigate to TestPageListening
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromRGBO(30, 165, 252, 1),
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              child: Text(
-                'Bắt đầu',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color.fromRGBO(245, 245, 245, 1),
-                  fontFamily: 'Inter',
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  height: 1.5,
-                ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/testPageListening'); // Navigate to TestPageListening
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color.fromRGBO(30, 165, 252, 1),
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
               ),
             ),
-          
+            child: Text(
+              'Bắt đầu',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color.fromRGBO(245, 245, 245, 1),
+                fontFamily: 'Inter',
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                height: 1.5,
+              ),
+            ),
+          ),
         ],
       ),
     );

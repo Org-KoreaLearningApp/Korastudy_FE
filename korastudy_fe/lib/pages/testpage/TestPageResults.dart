@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:korastudy_fe/pages/testpage/DetailResult.dart';
 import 'package:korastudy_fe/pages/testpage/ShowResult.dart';
+import 'package:korastudy_fe/pages/testpage/ListTest.dart';
 
 class ResultsScreen extends StatelessWidget {
   const ResultsScreen({Key? key}) : super(key: key);
@@ -20,37 +21,40 @@ class ResultsScreen extends StatelessWidget {
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return AppBar(
-      elevation: 0,
-      toolbarHeight: 54,
-      backgroundColor: Color(0XFF1EA5FC),
-      automaticallyImplyLeading: false,
-      leadingWidth: 44,
-      leading: Padding(
-        padding: EdgeInsets.only(left: 10),
-        child: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-            size: 26,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      centerTitle: true,
-      title: Text(
-        "Kết quả",
-        style: TextStyle(
+  return AppBar(
+    elevation: 0,
+    toolbarHeight: 54,
+    backgroundColor: Color(0XFF1EA5FC),
+    automaticallyImplyLeading: false,
+    leadingWidth: 44,
+    leading: Padding(
+      padding: EdgeInsets.only(left: 10),
+      child: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
           color: Colors.white,
-          fontSize: 20,
-          fontFamily: 'Inter',
-          fontWeight: FontWeight.w700,
+          size: 26,
         ),
+        onPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => ListTestWidget()),
+          );
+        },
       ),
-    );
-  }
+    ),
+    centerTitle: true,
+    title: Text(
+      "Kết quả",
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 20,
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w700,
+      ),
+    ),
+  );
+}
 
   Widget _buildBody(BuildContext context, int totalScore) {
     return SingleChildScrollView(
