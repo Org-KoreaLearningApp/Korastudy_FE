@@ -1,7 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/models/vocabulary_model.dart';
+import 'package:korastudy_fe/services/firestore_service.dart';
 import 'package:korastudy_fe/widgets/note_dialog.dart';
 
-class Vocabulary_list_meanWidget extends StatelessWidget {
+class VocabularyListMeanWidget extends StatefulWidget {
+  final String setId;
+
+  VocabularyListMeanWidget({required this.setId});
+
+  @override
+  _VocabularyListMeanWidgetState createState() =>
+      _VocabularyListMeanWidgetState();
+}
+
+class _VocabularyListMeanWidgetState extends State<VocabularyListMeanWidget> {
+  final FirestoreService _firestoreService = FirestoreService();
+  late Future<List<Vocabulary>> _vocabularyList;
+
+  @override
+  void initState() {
+    super.initState();
+    _vocabularyList = _firestoreService.getVocabularies(widget.setId);
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -10,11 +31,7 @@ class Vocabulary_list_meanWidget extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(70, 160, 229, 1),
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            size: 30,
-            color: Colors.white,
-          ),
+          icon: Icon(Icons.arrow_back, size: 30, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -29,33 +46,32 @@ class Vocabulary_list_meanWidget extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            buildVocabularyCard(
-                '한국', 'Korea', screenWidth, screenHeight, context),
-            SizedBox(height: screenHeight * 0.02),
-            buildVocabularyCard(
-                '베트남', 'Vietnam', screenWidth, screenHeight, context),
-            SizedBox(height: screenHeight * 0.02),
-            buildVocabularyCard(
-                '미국', 'USA', screenWidth, screenHeight, context),
-            SizedBox(height: screenHeight * 0.02),
-            buildVocabularyCard('영국', 'UK', screenWidth, screenHeight, context),
-            SizedBox(height: screenHeight * 0.02),
-            buildVocabularyCard('영국', 'UK', screenWidth, screenHeight, context),
-            SizedBox(height: screenHeight * 0.02),
-            buildVocabularyCard('영국', 'UK', screenWidth, screenHeight, context),
-            SizedBox(height: screenHeight * 0.02),
-            buildVocabularyCard('영국', 'UK', screenWidth, screenHeight, context),
-            SizedBox(height: screenHeight * 0.02),
-            buildVocabularyCard('영국', 'UK', screenWidth, screenHeight, context),
-            SizedBox(height: screenHeight * 0.02),
-            buildVocabularyCard('영국', 'UK', screenWidth, screenHeight, context),
-            SizedBox(height: screenHeight * 0.02),
-          ],
-        ),
+      body: FutureBuilder<List<Vocabulary>>(
+        future: _vocabularyList,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Lỗi: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('Không có dữ liệu'));
+          } else {
+            return SingleChildScrollView(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                children: snapshot.data!.map((vocabulary) {
+                  return Column(
+                    children: [
+                      buildVocabularyCard(vocabulary.word, vocabulary.meaning,
+                          screenWidth, screenHeight, context),
+                      SizedBox(height: screenHeight * 0.02),
+                    ],
+                  );
+                }).toList(),
+              ),
+            );
+          }
+        },
       ),
     );
   }

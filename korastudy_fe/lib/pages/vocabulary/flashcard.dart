@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
+import 'package:korastudy_fe/models/vocabulary_model.dart';
+import 'package:korastudy_fe/services/firestore_service.dart';
 
 class FlashcardPage extends StatefulWidget {
   @override
@@ -7,12 +9,21 @@ class FlashcardPage extends StatefulWidget {
 }
 
 class _FlashcardPageState extends State<FlashcardPage> {
-  final List<String> words = ['한국', '베트남', '미국', '영국'];
-  final List<String> meanings = ['Korea', 'Vietnam', 'USA', 'UK'];
+  final FirestoreService _firestoreService = FirestoreService();
+  late Future<List<VocabularySet>> _vocabularySets;
+  String? _selectedSetId;
+  List<Vocabulary> _vocabularies = [];
 
+  List<String> get words => _vocabularies.map((v) => v.word).toList();
+  List<String> get meanings => _vocabularies.map((v) => v.meaning).toList();
   int currentIndex = 0;
   int knownCount = 0;
   int unknownCount = 0;
+  @override
+  void initState() {
+    super.initState();
+    _vocabularySets = _firestoreService.getVocabularySets();
+  }
 
   void onSwipeLeft() {
     setState(() {
@@ -38,101 +49,103 @@ class _FlashcardPageState extends State<FlashcardPage> {
     });
   }
 
+  void _onSetSelected(String? setId) async {
+    if (setId != null) {
+      List<Vocabulary> vocabularies =
+          await _firestoreService.getVocabularies(setId);
+      setState(() {
+        _selectedSetId = setId;
+        _vocabularies = vocabularies;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF46A0E5),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          'Bài 1A : Giới thiệu',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () {
-              // Open settings
-            },
-          ),
-        ],
+        title: Text('Flashcards'),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: GestureDetector(
-              onHorizontalDragEnd: (details) {
-                if (details.primaryVelocity! < 0) {
-                  onSwipeLeft();
-                } else if (details.primaryVelocity! > 0) {
-                  onSwipeRight();
-                }
+      body: FutureBuilder<List<VocabularySet>>(
+        future: _vocabularySets,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No vocabulary sets available.'));
+          } else {
+            return _buildFlashcardContent();
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildFlashcardContent() {
+    if (_vocabularies.isEmpty) {
+      return Center(child: Text('No vocabularies available.'));
+    }
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32.0),
+          child: LinearProgressIndicator(
+            value: (currentIndex + 1) / words.length,
+            backgroundColor: Colors.grey[300],
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF46A0E5)),
+          ),
+        ),
+        SizedBox(height: 16),
+        // Score indicators
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            CircleAvatar(
+              backgroundColor: Colors.red,
+              child: Text(
+                '$unknownCount',
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.info),
+              onPressed: () {
+                // Show additional information if needed
               },
-              child: FlipCard(
-                front: Flashcard(text: words[currentIndex]),
-                back: Flashcard(text: meanings[currentIndex]),
+            ),
+            CircleAvatar(
+              backgroundColor: Colors.green,
+              child: Text(
+                '$knownCount',
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
             ),
-          ),
-          SizedBox(height: 16),
-
-          // Progress bar
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32.0),
-            child: LinearProgressIndicator(
-              value: (currentIndex + 1) / words.length,
-              backgroundColor: Colors.grey[300],
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF46A0E5)),
+          ],
+        ),
+        // Flashcard display
+        Expanded(
+          child: Center(
+            child: Flashcard(
+              text: words[currentIndex],
+              onTap: () {
+                // Handle flashcard tap
+              },
             ),
           ),
-          SizedBox(height: 16),
-
-          // Score indicators
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              CircleAvatar(
-                backgroundColor: Colors.red,
-                child: Text(
-                  '$unknownCount',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-              IconButton(
-                icon: Icon(Icons.info),
-                onPressed: () {
-                  // Show additional information if needed
-                },
-              ),
-              CircleAvatar(
-                backgroundColor: Colors.blue,
-                child: Text(
-                  '$knownCount',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 16),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
 class Flashcard extends StatelessWidget {
   final String text;
-  const Flashcard({required this.text});
+  const Flashcard({required this.text, required Null Function() onTap});
 
   @override
   Widget build(BuildContext context) {
