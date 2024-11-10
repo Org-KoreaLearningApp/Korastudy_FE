@@ -4,59 +4,68 @@ import 'package:korastudy_fe/pages/testpage/ShowResult.dart';
 import 'package:korastudy_fe/pages/testpage/ListTest.dart';
 
 class ResultsScreen extends StatelessWidget {
-  const ResultsScreen({Key? key}) : super(key: key);
+  final int totalScore;
+  final int listeningScore;
+  final int readingScore;
+  final List<Map<String, dynamic>> results; // Thêm biến results
+
+  const ResultsScreen({
+    Key? key,
+    required this.totalScore,
+    required this.listeningScore,
+    required this.readingScore,
+    required this.results, // Thêm biến results
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final int totalScore = 110;
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: _buildAppBar(context),
-        body: _buildBody(context, totalScore),
+        body: _buildBody(context),
         bottomNavigationBar: _buildActionsSection(context),
       ),
     );
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-  return AppBar(
-    elevation: 0,
-    toolbarHeight: 54,
-    backgroundColor: Color(0XFF1EA5FC),
-    automaticallyImplyLeading: false,
-    leadingWidth: 44,
-    leading: Padding(
-      padding: EdgeInsets.only(left: 10),
-      child: IconButton(
-        icon: Icon(
-          Icons.arrow_back,
-          color: Colors.white,
-          size: 26,
+    return AppBar(
+      elevation: 0,
+      toolbarHeight: 54,
+      backgroundColor: Color(0XFF1EA5FC),
+      automaticallyImplyLeading: false,
+      leadingWidth: 44,
+      leading: Padding(
+        padding: EdgeInsets.only(left: 10),
+        child: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+            size: 26,
+          ),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => ListTestWidget()),
+            );
+          },
         ),
-        onPressed: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => ListTestWidget()),
-          );
-        },
       ),
-    ),
-    centerTitle: true,
-    title: Text(
-      "Kết quả",
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 20,
-        fontFamily: 'Inter',
-        fontWeight: FontWeight.w700,
+      centerTitle: true,
+      title: Text(
+        "Kết quả",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w700,
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-  Widget _buildBody(BuildContext context, int totalScore) {
+  Widget _buildBody(BuildContext context) {
     return SingleChildScrollView(
       child: SizedBox(
         width: double.infinity,
@@ -82,7 +91,7 @@ class ResultsScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 44),
-                  _buildTestResultsSection(context, totalScore),
+                  _buildTestResultsSection(context),
                 ],
               ),
             ),
@@ -92,7 +101,7 @@ class ResultsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTestResultsSection(BuildContext context, int totalScore) {
+  Widget _buildTestResultsSection(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
@@ -144,12 +153,12 @@ class ResultsScreen extends StatelessWidget {
                 Expanded(
                   child: Column(
                     children: [
-                      _buildResultRow("듣기 \nListening", "25/100"),
-                      _buildResultRow("읽기 \nReading", "25/100"),
+                      _buildResultRow("듣기 \nListening", "$listeningScore/100"),
+                      _buildResultRow("읽기 \nReading", "$readingScore/100"),
                     ],
                   ),
                 ),
-                _buildTotalScoreColumn("50/200"),
+                _buildTotalScoreColumn("$totalScore/200"),
                 _buildTotalScoreColumn("X"),
               ],
             ),
@@ -355,7 +364,7 @@ class ResultsScreen extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ShowResultScreen()),
+            MaterialPageRoute(builder: (context) => ShowResultScreen(results: results)), // Truyền dữ liệu results
           );
         },
         child: Text(
@@ -387,7 +396,9 @@ class ResultsScreen extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => DetailResultWidget()),
+            MaterialPageRoute(builder: (context) => DetailResultWidget(
+              results: results,
+            )),
           );
         },
         child: Text(

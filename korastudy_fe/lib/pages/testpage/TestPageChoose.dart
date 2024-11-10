@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'TestPageFinal.dart'; // Import trang cuối
+import 'TestPageResults.dart'; 
 
 class TestPageChooseWidget extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
   List<Question> _questions = [];
   List<String?> _selectedAnswers = [];
   int _currentPage = 0;
+  int _lastListeningPage = 0;
   PageController _pageController = PageController();
   AudioPlayer _audioPlayer = AudioPlayer();
   String _audioUrl = '';
@@ -20,6 +22,10 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
   Duration _audioPosition = Duration.zero;
   Timer? _timer;
   Duration _remainingTime = Duration(minutes: 90);
+  bool _readingDialogShown = false;
+  int _totalScore = 0;
+  int _listeningScore = 0;
+  int _readingScore = 0;
 
   @override
   void initState() {
@@ -80,8 +86,19 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
           }).toList();
           _selectedAnswers = List<String?>.filled(_questions.length, null);
 
-          // Lấy URL của audio từ câu hỏi đầu tiên
-          if (_questions.isNotEmpty && _questions[0].audioUrl.isNotEmpty) {
+          // Sắp xếp lại thứ tự câu hỏi
+          _questions.sort((a, b) {
+            if (a.questionType == 'listening' && b.questionType == 'reading') {
+              return -1;
+            } else if (a.questionType == 'reading' && b.questionType == 'listening') {
+              return 1;
+            } else {
+              return 0;
+            }
+          });
+
+          // Lấy URL của audio từ câu hỏi đầu tiên nếu có
+          if (_questions.isNotEmpty && _questions[0].questionType == 'listening' && _questions[0].audioUrl.isNotEmpty) {
             _audioUrl = _questions[0].audioUrl;
             _playAudio();
           }
@@ -98,6 +115,7 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
   }
 
   Future<void> _playAudio() async {
+    await _audioPlayer.stop(); // Dừng audio hiện tại trước khi phát audio mới
     if (_audioUrl.isNotEmpty) {
       await _audioPlayer.play(UrlSource(_audioUrl));
       print('Audio started playing');
@@ -118,10 +136,70 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
           duration: Duration(milliseconds: 300),
           curve: Curves.easeIn,
         );
+
+        // Kiểm tra nếu chuyển sang phần "reading"
+        if (_questions[_currentPage].questionType == 'reading' && !_readingDialogShown) {
+          _audioPlayer.stop();
+          _showReadingDialog();
+          _readingDialogShown = true;
+        } else if (_questions[_currentPage].questionType == 'listening' && _questions[_currentPage].audioUrl.isNotEmpty) {
+          _audioUrl = _questions[_currentPage].audioUrl;
+          _playAudio();
+          _lastListeningPage = _currentPage; // Cập nhật trang nghe cuối cùng
+        }
       } else if (_allQuestionsAnswered()) {
+        _calculateScore();
         _showSubmitDialog();
       }
     });
+  }
+
+  void _calculateScore() {
+    int totalScore = 0;
+    int listeningScore = 0;
+    int readingScore = 0;
+
+    for (int i = 0; i < _questions.length; i++) {
+      if (_selectedAnswers[i] == _questions[i].correctAnswer) {
+        totalScore += _questions[i].score;
+        if (_questions[i].questionType == 'listening') {
+          listeningScore += _questions[i].score;
+        } else if (_questions[i].questionType == 'reading') {
+          readingScore += _questions[i].score;
+        }
+      }
+    }
+
+    setState(() {
+      _totalScore = totalScore;
+      _listeningScore = listeningScore;
+      _readingScore = readingScore;
+    });
+  }
+
+  void _showReadingDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Thông báo'),
+        content: Text('Bạn muốn chuyển qua 읽기. Audio nghe sẽ không được phát lại.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _pageController.jumpToPage(_lastListeningPage); // Quay lại câu nghe cuối cùng
+            },
+            child: Text('Hủy'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Tiếp tục'),
+          ),
+        ],
+      ),
+    );
   }
 
   bool _allQuestionsAnswered() {
@@ -129,30 +207,49 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
   }
 
   void _showSubmitDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Bạn có muốn nộp bài?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text('Hủy'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(true);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => TestPageFinalWidget()),
-              );
-              _audioPlayer.stop(); // Dừng audio khi nộp bài
-            },
-            child: Text('Đồng ý'),
-          ),
-        ],
-      ),
-    );
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Bạn có muốn nộp bài?'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: Text('Hủy'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(true);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ResultsScreen(
+                totalScore: _totalScore,
+                listeningScore: _listeningScore,
+                readingScore: _readingScore,
+                results: _buildResults(), // Truyền tham số results
+              )),
+            );
+            _audioPlayer.stop(); // Dừng audio khi nộp bài
+          },
+          child: Text('Đồng ý'),
+        ),
+      ],
+    ),
+  );
+}
+
+List<Map<String, dynamic>> _buildResults() {
+  List<Map<String, dynamic>> results = [];
+  for (int i = 0; i < _questions.length; i++) {
+    results.add({
+      'question': _questions[i].questionText,
+      'correct': _selectedAnswers[i] == _questions[i].correctAnswer,
+      'answer': _selectedAnswers[i] ?? '',
+      'score': _questions[i].score,
+      'correctAnswer': _questions[i].correctAnswer,
+    });
   }
+  return results;
+}
 
   Future<bool> _onWillPop() async {
     bool shouldPop = await showDialog(
@@ -233,8 +330,12 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
                 color: Colors.white,
                 child: Column(
                   children: [
-                    _buildAudioPlayer(),
                     _buildProgressBar(),
+                    if (_questions.isNotEmpty && _questions[_currentPage].questionType == 'listening' && _audioUrl.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: _buildAudioPlayer(audioUrl: _audioUrl),
+                      ),
                     Expanded(
                       child: PageView.builder(
                         controller: _pageController,
@@ -293,7 +394,6 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
   Widget _buildQuestionHeader(String questionText) {
     return Container(
       width: 344,
-      height: 89,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
         color: Color.fromRGBO(135, 185, 231, 1),
@@ -311,7 +411,7 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
     );
   }
 
-  Widget _buildAudioPlayer() {
+  Widget _buildAudioPlayer({required String audioUrl}) {
     return Container(
       width: double.infinity,
       height: 50,
@@ -326,7 +426,7 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
           IconButton(
             icon: Icon(Icons.play_arrow, color: Colors.white),
             onPressed: () async {
-              await _audioPlayer.play(UrlSource(_audioUrl));
+              await _audioPlayer.play(UrlSource(audioUrl));
               print('Audio started playing');
             },
           ),
@@ -346,10 +446,26 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
 
   Widget _buildAnswerOptions(Question question) {
     return Column(
-      children: question.choices.entries.map((entry) {
-        return _buildAnswerOption(entry.key, entry.value);
-      }).toList(),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ...question.choices.entries.map((entry) {
+          return _buildAnswerOption(entry.key, entry.value);
+        }).toList(),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton(
+            onPressed: _clearAnswer,
+            child: Text('Clear'),
+          ),
+        ),
+      ],
     );
+  }
+
+  void _clearAnswer() {
+    setState(() {
+      _selectedAnswers[_currentPage] = null;
+    });
   }
 
   Widget _buildAnswerOption(String label, String text) {
@@ -364,11 +480,11 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
         child: Row(
           children: [
             Container(
-              width: 33,
-              height: 33,
+              width: 20, // Giảm kích thước hình tròn
+              height: 20, // Giảm kích thước hình tròn
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _selectedAnswers[_currentPage] == label ? Colors.yellow : Colors.white,
+                color: _selectedAnswers[_currentPage] == label ? Colors.black : Colors.white, // Tô đen khi được chọn
                 border: Border.all(color: Colors.black, width: 1.5),
               ),
             ),
@@ -410,7 +526,7 @@ class Question {
     return Question(
       questionType: json['questionType'],
       questionText: json['questionText'],
-      audioUrl: json['audioUrl'],
+      audioUrl: json['audioUrl'] ?? '',
       choices: Map<String, String>.from(json['choices']),
       correctAnswer: json['correctAnswer'],
       score: json['score'],
