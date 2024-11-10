@@ -244,61 +244,61 @@ class _VocabularyListWidgetState extends State<VocabularyListWidget> {
               ),
             ),
           ),
-          Positioned(
-            bottom: 16,
-            right: 16,
-            child: Container(
-              padding: EdgeInsets.all(8),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      // Xử lý sự kiện khi nhấn vào biểu tượng quiz
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                TestPage()), // Replace with your next page
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(50),
-                    child: CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.lightBlue,
-                      child: Icon(
-                        Icons.headset, // Icon hình câu hỏi
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16), // Khoảng cách giữa các biểu tượng
-                  InkWell(
-                    onTap: () {
-                      // Xử lý sự kiện khi nhấn vào biểu tượng quiz
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                FlashcardPage()), // Replace with your next page
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(50),
-                    child: CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.lightBlue,
-                      child: Icon(
-                        Icons.quiz, // Icon hình câu hỏi
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
+          // Positioned(
+          //   bottom: 16,
+          //   right: 16,
+          //   child: Container(
+          //     padding: EdgeInsets.all(8),
+          //     child: Column(
+          //       mainAxisSize: MainAxisSize.min,
+          //       children: [
+          //         InkWell(
+          //           onTap: () {
+          //             // Xử lý sự kiện khi nhấn vào biểu tượng quiz
+          //             Navigator.push(
+          //               context,
+          //               MaterialPageRoute(
+          //                   builder: (context) =>
+          //                       TestPage()), // Replace with your next page
+          //             );
+          //           },
+          //           borderRadius: BorderRadius.circular(50),
+          //           child: CircleAvatar(
+          //             radius: 30,
+          //             backgroundColor: Colors.lightBlue,
+          //             child: Icon(
+          //               Icons.headset, // Icon hình câu hỏi
+          //               color: Colors.white,
+          //               size: 30,
+          //             ),
+          //           ),
+          //         ),
+          //         SizedBox(height: 16), // Khoảng cách giữa các biểu tượng
+          //         InkWell(
+          //           onTap: () {
+          //             // Xử lý sự kiện khi nhấn vào biểu tượng quiz
+          //             Navigator.push(
+          //               context,
+          //               MaterialPageRoute(
+          //                   builder: (context) =>
+          //                       FlashcardPage()), // Replace with your next page
+          //             );
+          //           },
+          //           borderRadius: BorderRadius.circular(50),
+          //           child: CircleAvatar(
+          //             radius: 30,
+          //             backgroundColor: Colors.lightBlue,
+          //             child: Icon(
+          //               Icons.quiz, // Icon hình câu hỏi
+          //               color: Colors.white,
+          //               size: 30,
+          //             ),
+          //           ),
+          //         )
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -348,7 +348,7 @@ class _VocabularyListWidgetState extends State<VocabularyListWidget> {
             ),
             SizedBox(height: 10),
             Text(
-              vocabularySet.title,
+              vocabularySet.name,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color.fromRGBO(0, 0, 0, 1),

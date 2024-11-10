@@ -1,6 +1,8 @@
+// lib/pages/vocabulary/vocabulary_list_mean.dart
 import 'package:flutter/material.dart';
 import 'package:korastudy_fe/models/vocabulary_model.dart';
 import 'package:korastudy_fe/services/firestore_service.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:korastudy_fe/widgets/note_dialog.dart';
 
 class VocabularyListMeanWidget extends StatefulWidget {
@@ -9,17 +11,29 @@ class VocabularyListMeanWidget extends StatefulWidget {
   VocabularyListMeanWidget({required this.setId});
 
   @override
-  _VocabularyListMeanWidgetState createState() => _VocabularyListMeanWidgetState();
+  _VocabularyListMeanWidgetState createState() =>
+      _VocabularyListMeanWidgetState();
 }
 
 class _VocabularyListMeanWidgetState extends State<VocabularyListMeanWidget> {
   final FirestoreService _firestoreService = FirestoreService();
   late Future<List<Vocabulary>> _vocabularyList;
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
     super.initState();
     _vocabularyList = _firestoreService.getVocabularies(widget.setId);
+  }
+
+  void _playAudio(String url) async {
+    try {
+      print('Playing audio from URL: $url');
+      await _audioPlayer.play(UrlSource(url));
+      print('Audio playback started successfully');
+    } catch (e) {
+      print('Error playing audio: $e');
+    }
   }
 
   @override
@@ -61,7 +75,8 @@ class _VocabularyListMeanWidgetState extends State<VocabularyListMeanWidget> {
                 children: snapshot.data!.map((vocabulary) {
                   return Column(
                     children: [
-                      buildVocabularyCard(vocabulary.word, vocabulary.meaning, screenWidth, screenHeight, context),
+                      buildVocabularyCard(
+                          vocabulary, screenWidth, screenHeight, context),
                       SizedBox(height: screenHeight * 0.02),
                     ],
                   );
@@ -74,7 +89,8 @@ class _VocabularyListMeanWidgetState extends State<VocabularyListMeanWidget> {
     );
   }
 
-  Widget buildVocabularyCard(String word, String meaning, double screenWidth, double screenHeight, BuildContext context) {
+  Widget buildVocabularyCard(Vocabulary vocabulary, double screenWidth,
+      double screenHeight, BuildContext context) {
     return Container(
       width: screenWidth * 0.95,
       height: screenHeight * 0.16,
@@ -107,9 +123,17 @@ class _VocabularyListMeanWidgetState extends State<VocabularyListMeanWidget> {
                       height: screenWidth * 0.13,
                       decoration: BoxDecoration(
                         color: Color.fromRGBO(94, 186, 217, 1),
-                        borderRadius: BorderRadius.all(Radius.elliptical(screenWidth * 0.13, screenWidth * 0.13)),
+                        borderRadius: BorderRadius.all(Radius.elliptical(
+                            screenWidth * 0.13, screenWidth * 0.13)),
                       ),
-                      child: Icon(Icons.volume_up, color: Colors.white), // Speaker icon
+                      child: IconButton(
+                        icon: Icon(Icons.volume_up,
+                            color: Colors.white), // Speaker icon
+                        onPressed: () {
+                          print('Audio URL: ${vocabulary.audioUrl}');
+                          _playAudio(vocabulary.audioUrl);
+                        },
+                      ),
                     ),
                   ),
                 ],
@@ -122,24 +146,27 @@ class _VocabularyListMeanWidgetState extends State<VocabularyListMeanWidget> {
             child: Container(
               width: screenWidth * 0.17,
               height: screenHeight * 0.16,
-              child: Icon(Icons.favorite_border, color: Colors.black, size: screenWidth * 0.08), // Team icon
+              child: Icon(Icons.favorite_border,
+                  color: Colors.black, size: screenWidth * 0.08), // Team icon
             ),
           ),
           Positioned(
             top: 0,
             left: screenWidth * 0.17,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 0, vertical: screenHeight * 0.04),
+              padding: EdgeInsets.symmetric(
+                  horizontal: 0, vertical: screenHeight * 0.04),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.02, vertical: 0),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.02, vertical: 0),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Text(
-                          word,
+                          vocabulary.word,
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: Color.fromRGBO(0, 0, 0, 1),
@@ -155,12 +182,14 @@ class _VocabularyListMeanWidgetState extends State<VocabularyListMeanWidget> {
                   ),
                   SizedBox(height: screenHeight * 0.005),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.02, vertical: screenHeight * 0.005),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.02,
+                        vertical: screenHeight * 0.005),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Text(
-                          meaning,
+                          vocabulary.meaning,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Color.fromRGBO(0, 0, 0, 1),
