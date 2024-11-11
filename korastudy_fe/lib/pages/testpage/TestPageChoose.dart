@@ -6,6 +6,10 @@ import 'TestPageFinal.dart'; // Import trang cuối
 import 'TestPageResults.dart'; 
 
 class TestPageChooseWidget extends StatefulWidget {
+  final String testId; // Nhận testId từ trang ListTest
+
+  TestPageChooseWidget({required this.testId});
+
   @override
   _TestPageChooseWidgetState createState() => _TestPageChooseWidgetState();
 }
@@ -72,42 +76,46 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
 
   Future<void> _loadQuestions() async {
     try {
-      final snapshot = await FirebaseFirestore.instance
+      final testDoc = await FirebaseFirestore.instance
           .collection('testpage')
-          .doc('test1')
-          .collection('questions')
-          .orderBy(FieldPath.documentId)
+          .doc(widget.testId)
           .get();
 
-      if (snapshot.docs.isNotEmpty) {
-        setState(() {
-          _questions = snapshot.docs.map((doc) {
-            return Question.fromJson(doc.data() as Map<String, dynamic>);
-          }).toList();
-          _selectedAnswers = List<String?>.filled(_questions.length, null);
+      if (testDoc.exists) {
+        final testData = testDoc.data() as Map<String, dynamic>;
+        _audioUrl = testData['audioUrl'] ?? '';
 
-          // Sắp xếp lại thứ tự câu hỏi
-          _questions.sort((a, b) {
-            if (a.questionType == 'listening' && b.questionType == 'reading') {
-              return -1;
-            } else if (a.questionType == 'reading' && b.questionType == 'listening') {
-              return 1;
-            } else {
-              return 0;
+        final questionsSnapshot = await FirebaseFirestore.instance
+            .collection('testpage')
+            .doc(widget.testId) // Sử dụng testId để truy vấn câu hỏi
+            .collection('questions')
+            .orderBy(FieldPath.documentId)
+            .get();
+
+        if (questionsSnapshot.docs.isNotEmpty) {
+          setState(() {
+            _questions = questionsSnapshot.docs.map((doc) {
+              final data = doc.data() as Map<String, dynamic>;
+              return Question.fromJson(data);
+            }).toList();
+            _selectedAnswers = List<String?>.filled(_questions.length, null);
+
+            // Sắp xếp lại thứ tự câu hỏi theo trường order
+            _questions.sort((a, b) => a.order.compareTo(b.order));
+
+            // Phát audio nếu có URL
+            if (_audioUrl.isNotEmpty) {
+              _playAudio();
             }
           });
 
-          // Lấy URL của audio từ câu hỏi đầu tiên nếu có
-          if (_questions.isNotEmpty && _questions[0].questionType == 'listening' && _questions[0].audioUrl.isNotEmpty) {
-            _audioUrl = _questions[0].audioUrl;
-            _playAudio();
-          }
-        });
-
-        // Thêm thông báo debug
-        print('Questions loaded: ${_questions.length}');
+          // Thêm thông báo debug
+          print('Questions loaded: ${_questions.length}');
+        } else {
+          print('No questions found');
+        }
       } else {
-        print('No questions found');
+        print('Test document does not exist');
       }
     } catch (e) {
       print('Error loading questions: $e');
@@ -142,10 +150,6 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
           _audioPlayer.stop();
           _showReadingDialog();
           _readingDialogShown = true;
-        } else if (_questions[_currentPage].questionType == 'listening' && _questions[_currentPage].audioUrl.isNotEmpty) {
-          _audioUrl = _questions[_currentPage].audioUrl;
-          _playAudio();
-          _lastListeningPage = _currentPage; // Cập nhật trang nghe cuối cùng
         }
       } else if (_allQuestionsAnswered()) {
         _calculateScore();
@@ -393,7 +397,7 @@ List<Map<String, dynamic>> _buildResults() {
 
   Widget _buildQuestionHeader(String questionText) {
     return Container(
-      width: 344,
+      width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
         color: Color.fromRGBO(135, 185, 231, 1),
@@ -448,9 +452,10 @@ List<Map<String, dynamic>> _buildResults() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ...question.choices.entries.map((entry) {
-          return _buildAnswerOption(entry.key, entry.value);
-        }).toList(),
+        _buildAnswerOption('A', question.choices['choiceA'] ?? ''),
+        _buildAnswerOption('B', question.choices['choiceB'] ?? ''),
+        _buildAnswerOption('C', question.choices['choiceC'] ?? ''),
+        _buildAnswerOption('D', question.choices['choiceD'] ?? ''),
         Align(
           alignment: Alignment.centerLeft,
           child: TextButton(
@@ -488,14 +493,16 @@ List<Map<String, dynamic>> _buildResults() {
                 border: Border.all(color: Colors.black, width: 1.5),
               ),
             ),
-            SizedBox(width: 10),
-            Text(
-              text,
-              style: TextStyle(
-                color: Colors.black,
-                fontFamily: 'Inter',
-                fontSize: 16,
-                fontWeight: FontWeight.normal,
+            SizedBox(width: 20), // Tăng khoảng cách giữa hình tròn và văn bản
+            Expanded(
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Inter',
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
+                ),
               ),
             ),
           ],
@@ -508,28 +515,33 @@ List<Map<String, dynamic>> _buildResults() {
 class Question {
   final String questionType;
   final String questionText;
-  final String audioUrl;
   final Map<String, String> choices;
   final String correctAnswer;
   final int score;
+  final int order; // Thêm trường order
 
   Question({
     required this.questionType,
     required this.questionText,
-    required this.audioUrl,
     required this.choices,
     required this.correctAnswer,
     required this.score,
+    required this.order, // Thêm trường order
   });
 
   factory Question.fromJson(Map<String, dynamic> json) {
     return Question(
       questionType: json['questionType'],
       questionText: json['questionText'],
-      audioUrl: json['audioUrl'] ?? '',
-      choices: Map<String, String>.from(json['choices']),
+      choices: {
+        'choiceA': json['choiceA'] ?? '',
+        'choiceB': json['choiceB'] ?? '',
+        'choiceC': json['choiceC'] ?? '',
+        'choiceD': json['choiceD'] ?? '',
+      },
       correctAnswer: json['correctAnswer'],
       score: json['score'],
+      order: json['order'], // Thêm trường order
     );
   }
 }
