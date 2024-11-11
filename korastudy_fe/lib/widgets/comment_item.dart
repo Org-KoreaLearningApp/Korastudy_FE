@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/services/comment_service.dart';
 
 class CommentItem extends StatefulWidget {
+  final String commentId;
   final String urlImge;
   final String name;
-  final int hour;
-  final String title;
-  final String summary;
+  final String date;
+  final String content;
+  final String postId;
   final int likeNum;
   final int unlikeNum;
 
+  // bool isUnLike = false;
+
   CommentItem({
+    required this.commentId,
     required this.urlImge,
     required this.name,
-    required this.hour,
-    required this.title,
-    required this.summary,
+    required this.date,
+    required this.content,
+    required this.postId,
     required this.likeNum,
     required this.unlikeNum,
   });
@@ -24,8 +29,14 @@ class CommentItem extends StatefulWidget {
 }
 
 class _CommentItemState extends State<CommentItem> {
+  bool isLike = false;
+  int likeNum = 0;
+
+  CommentService _commentService = CommentService();
+
   @override
   Widget build(BuildContext context) {
+    likeNum = widget.likeNum;
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -39,7 +50,7 @@ class _CommentItemState extends State<CommentItem> {
             children: [
               CircleAvatar(
                 radius: 25.0,
-                backgroundImage: AssetImage('assets/images/user3.jpg'),
+                backgroundImage: NetworkImage(widget.urlImge),
               ),
               SizedBox(
                 width: 15.0,
@@ -48,11 +59,11 @@ class _CommentItemState extends State<CommentItem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "매진 무궁와",
+                    widget.name,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                   Text(
-                    "2 hour",
+                    widget.date,
                     textAlign: TextAlign.left,
                     style: TextStyle(color: Color(0xFFA5A5A5)),
                   )
@@ -64,7 +75,7 @@ class _CommentItemState extends State<CommentItem> {
             height: 10.0,
           ),
           Text(
-            "Bài viết của bạn rất chi tiết và hữu ích! Mình mới bắt đầu học ngữ pháp TOPIK II, và phần này khá khó đối với mình.",
+            widget.content,
             style: TextStyle(color: Colors.black),
           ),
           // ),
@@ -75,27 +86,37 @@ class _CommentItemState extends State<CommentItem> {
               Row(
                 children: [
                   IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.thumb_up),
-                    color: Color(0xFFA5A5A5),
+                    onPressed: () async {
+                      setState(() {
+                        isLike = !isLike;
+                        likeNum = isLike ? likeNum + 1 : likeNum - 1;
+                      });
+
+                      await _commentService.updateLikeCount(
+                          widget.commentId, likeNum);
+                    },
+                    icon: isLike
+                        ? Icon(Icons.thumb_up_rounded)
+                        : Icon(Icons.thumb_up),
+                    color: isLike ? Color(0xFF1EA5FC) : Color(0xFFA5A5A5),
                     iconSize: 20,
                   ),
-                  Text("113 thích",
+                  Text("${likeNum} thích",
                       style: TextStyle(color: Color(0xFFA5A5A5), fontSize: 12))
                 ],
               ),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.thumb_down),
-                    color: Color(0xFFA5A5A5),
-                    iconSize: 20,
-                  ),
-                  Text("113 không thích",
-                      style: TextStyle(color: Color(0xFFA5A5A5), fontSize: 12))
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     IconButton(
+              //       onPressed: () {},
+              //       icon: Icon(Icons.thumb_down),
+              //       color: Color(0xFFA5A5A5),
+              //       iconSize: 20,
+              //     ),
+              //     Text("${widget.unlikeNum} không thích",
+              //         style: TextStyle(color: Color(0xFFA5A5A5), fontSize: 12))
+              //   ],
+              // ),
             ],
           ),
           // ),

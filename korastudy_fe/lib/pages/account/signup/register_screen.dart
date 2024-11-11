@@ -3,8 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:korastudy_fe/pages/account/login/login_screen.dart';
 import 'package:korastudy_fe/pages/home/home_screen.dart';
+import 'package:korastudy_fe/provider/user_provider.dart';
 import 'package:korastudy_fe/services/secure_storage_service.dart';
 import 'package:korastudy_fe/widgets/login_input.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -21,6 +23,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final SecureStorageService _secureStorageService = SecureStorageService();
+  final UserProvider _userProvider = UserProvider();
 
   bool _saveAccount = false;
   String _errorText = "";
@@ -64,14 +67,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
+        User? currentUser = userCredential.user;
 
         DateTime now = DateTime.now();
 
         // After successful registration, save additional user data to Firestore
         await _firestore.collection('users').doc(userCredential.user?.uid).set({
+          'id': Provider.of<UserProvider>(context, listen: false).userId,
           'name': _nameController.text.trim(),
           'email': _emailController.text.trim(),
           'birthday': "${now.year}-${now.month}-${now.day}",
+          'address': "",
+          'image':
+              "https://drive.google.com/file/d/1MJo1yoE4mUXqBwp8zFuLDLLhrAHwmvEE/view?usp=drive_link",
+          'phoneNum': "",
+          'active': true,
+          'country': "",
+          'description': "",
+          'vip': false,
         });
 
         // // Retrieve the user document from Firestore after registration
@@ -97,6 +110,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             _passwordController.text.trim(),
           );
         }
+
+        await Provider.of<UserProvider>(context, listen: false).fetchUserId();
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Registration successful!')),

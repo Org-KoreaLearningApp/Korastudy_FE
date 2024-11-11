@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:korastudy_fe/pages/account/reset_password_screen.dart';
 import 'package:korastudy_fe/pages/account/signup/register_screen.dart';
 import 'package:korastudy_fe/pages/home/home_screen.dart';
+import 'package:korastudy_fe/provider/user_provider.dart';
 import 'package:korastudy_fe/services/auth_service.dart';
 import 'package:korastudy_fe/services/secure_storage_service.dart';
 import 'package:korastudy_fe/utils/dimension.dart';
 import 'package:korastudy_fe/widgets/login_input.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -20,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passController = TextEditingController();
   // final SharedPreferencesService _prefsService = SharedPreferencesService();
   final SecureStorageService _secureStorageService = SecureStorageService();
+  final UserProvider _userProvider = UserProvider();
 
   bool _saveAccount = false;
   String _errorText = "";
@@ -77,6 +80,8 @@ class _LoginScreenState extends State<LoginScreen> {
         } else {
           _secureStorageService.clearCredentials();
         }
+
+        await Provider.of<UserProvider>(context, listen: false).fetchUserId();
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Login successful!')),

@@ -10,17 +10,27 @@ class PostSearchScreen extends StatefulWidget {
 }
 
 class _PostSearchScreenState extends State<PostSearchScreen> {
+  Widget postListWidget = SizedBox.shrink();
+
+  void updatePostList(Widget newWidget) {
+    setState(() {
+      postListWidget = newWidget;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
         children: [
-          SearchInput(),
+          SearchInput(
+            onSearchResult: updatePostList,
+          ),
           SizedBox(
             height: 20.0,
           ),
-          Expanded(child: PostList()),
+          Expanded(child: postListWidget),
         ],
       ),
     );

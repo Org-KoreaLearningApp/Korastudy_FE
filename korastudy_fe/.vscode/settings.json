@@ -1,3 +1,4 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "cmake.sourceDirectory": "D:/Documents/4nd_year/1st_semester/Cross-flatform/project/Korastudy_FE_firebase/Korastudy_FE/korastudy_fe/linux"
 }

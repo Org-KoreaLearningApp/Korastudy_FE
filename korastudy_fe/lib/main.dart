@@ -3,6 +3,8 @@ import 'package:korastudy_fe/pages/account/login/login_screen.dart';
 import 'package:korastudy_fe/pages/account/reset_password_screen.dart';
 import 'package:korastudy_fe/pages/account/signup/register_screen.dart';
 import 'package:korastudy_fe/pages/forums/forums_screen.dart';
+import 'package:korastudy_fe/pages/forums/post_detail_screen.dart';
+import 'package:korastudy_fe/pages/forums/post_screen.dart';
 import 'package:korastudy_fe/pages/grammar/grammar_main.dart';
 import 'package:korastudy_fe/pages/home/home_screen.dart';
 import 'package:korastudy_fe/pages/vocabulary/dictionary_verb.dart';
@@ -20,6 +22,8 @@ import 'package:korastudy_fe/pages/testpage/listTest.dart'
     as list_test; // Import đúng cho ListTestWidget
 import 'package:korastudy_fe/pages/testpage/TestPageListening.dart'; // Import đúng cho TestPageListening
 import 'package:firebase_core/firebase_core.dart';
+import 'package:korastudy_fe/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 // Tạo bằng Firebase CLI
 
 // void main() async {
@@ -39,33 +43,36 @@ class MyApp extends StatelessWidget {
   // final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "KoraStudy App",
-      home: LoginScreen(),
-      routes: {
-        '/welcome1': (context) => WelcomePage1(),
-        '/welcome2': (context) => WelcomePage2(),
-        '/welcome3': (context) => WelcomePage3(),
-        '/welcome4': (context) => WelcomePage4(),
-        '/ChooseTopik': (context) => TopikChosePageWidget(),
-        '/Home': (context) => HomeScreen(),
-        '/Forum': (context) => ForumScreen(),
-        '/Grammar': (context) => const GrammarMain(),
-        '/vocabulary': (context) => VocabularyListWidget(),
-        '/listvoca': (context) => VocabularyListMeanWidget(
-              setId: '',
-            ),
-        '/dictionary': (context) => DictionaryVerbWidget(),
-        '/flashcard': (context) => FlashcardPage(),
-        '/testmixt': (context) => MatchingPage(),
-        'login': (context) => LoginScreen(),
-        'signup': (context) => RegisterScreen(),
-        '/listTest': (context) =>
-            list_test.ListTestWidget(), // Thêm route cho ListTestWidget
-        '/testPageListening': (context) =>
-            TestPageListening(), // Thêm route cho TestPageListening
-      },
+    return ChangeNotifierProvider(
+      create: (context) => UserProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: "KoraStudy App",
+        home: LoginScreen(),
+        routes: {
+          '/welcome1': (context) => WelcomePage1(),
+          '/welcome2': (context) => WelcomePage2(),
+          '/welcome3': (context) => WelcomePage3(),
+          '/welcome4': (context) => WelcomePage4(),
+          '/ChooseTopik': (context) => TopikChosePageWidget(),
+          '/Home': (context) => HomeScreen(),
+          '/Forum': (context) => ForumScreen(),
+          '/Grammar': (context) => const GrammarMain(),
+          '/vocabulary': (context) => VocabularyListWidget(),
+          '/listvoca': (context) => VocabularyListMeanWidget(
+                setId: '',
+              ),
+          '/dictionary': (context) => DictionaryVerbWidget(),
+          '/flashcard': (context) => FlashcardPage(),
+          '/testmixt': (context) => MatchingPage(),
+          'login': (context) => LoginScreen(),
+          'signup': (context) => RegisterScreen(),
+          '/listTest': (context) =>
+              list_test.ListTestWidget(), // Thêm route cho ListTestWidget
+          '/testPageListening': (context) =>
+              TestPageListening(), // Thêm route cho TestPageListening
+        },
+      ),
     );
   }
 }
