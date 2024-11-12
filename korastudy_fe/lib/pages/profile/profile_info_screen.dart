@@ -17,11 +17,12 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
   AuthService _authService = AuthService();
   late Future<Map<String, dynamic>?> _userDataFuture;
   final List<String> _imageTypes = [
-    'https://drive.google.com/file/d/1MJo1yoE4mUXqBwp8zFuLDLLhrAHwmvEE/view?usp=drive_link'
+    'https://drive.google.com/uc?id=1MJo1yoE4mUXqBwp8zFuLDLLhrAHwmvEE',
+    'https://drive.google.com/uc?id=17QJtmM5dbJ9U4KhgxyX3mNrg3wewG7mQ'
   ];
   int selectedIndex = 0;
   String imgUrl =
-      'https://drive.google.com/file/d/1MJo1yoE4mUXqBwp8zFuLDLLhrAHwmvEE/view?usp=drive_link';
+      'https://drive.google.com/uc?id=1MJo1yoE4mUXqBwp8zFuLDLLhrAHwmvEE';
 
   @override
   void initState() {
@@ -43,47 +44,47 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
     });
   }
 
-  Widget _loginReminder() {
-    return Container(
-      child: Center(
-        child: Column(
-          children: [
-            Text(
-                "Vui lòng đăng nhập hoặc đăng ký để xem thông tin cá nhân của bạn."),
-            SizedBox(
-              height: 20,
-            ),
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () {},
-                label: Text(
-                  "Đăng nhập",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF1EA5FC), elevation: 5),
-              ),
-            ),
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () {},
-                label: Text(
-                  "Đăng ký",
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFEEEEEE), elevation: 5),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _loginReminder() {
+  //   return Container(
+  //     child: Center(
+  //       child: Column(
+  //         children: [
+  //           Text(
+  //               "Vui lòng đăng nhập hoặc đăng ký để xem thông tin cá nhân của bạn."),
+  //           SizedBox(
+  //             height: 20,
+  //           ),
+  //           Expanded(
+  //             child: ElevatedButton.icon(
+  //               onPressed: () {},
+  //               label: Text(
+  //                 "Đăng nhập",
+  //                 style: TextStyle(
+  //                   color: Colors.white,
+  //                 ),
+  //               ),
+  //               style: ElevatedButton.styleFrom(
+  //                   backgroundColor: Color(0xFF1EA5FC), elevation: 5),
+  //             ),
+  //           ),
+  //           Expanded(
+  //             child: ElevatedButton.icon(
+  //               onPressed: () {},
+  //               label: Text(
+  //                 "Đăng ký",
+  //                 style: TextStyle(
+  //                   color: Colors.black,
+  //                 ),
+  //               ),
+  //               style: ElevatedButton.styleFrom(
+  //                   backgroundColor: Color(0xFFEEEEEE), elevation: 5),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   void updateUserInfo(String field_name) async {
     String uid = Provider.of<UserProvider>(context, listen: false).userId;
@@ -120,27 +121,31 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
             'Chọn hình ảnh đại diện',
             style: TextStyle(fontSize: 15),
           ),
-          content: ListView.builder(
-            itemCount: _imageTypes.length,
-            itemBuilder: (context, index) {
-              return RadioListTile<String>(
-                title: SizedBox(
-                  width: 20.0,
-                  height: 20.0,
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(imgUrl),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: ListView.builder(
+              itemCount: _imageTypes.length,
+              itemBuilder: (context, index) {
+                return RadioListTile<String>(
+                  title: CircleAvatar(
+                    backgroundImage: NetworkImage(_imageTypes[index]),
                   ),
-                ),
-                value: _imageTypes[index],
-                groupValue: imgUrl,
-                onChanged: (String? value) {
-                  setState(() {
-                    imgUrl = value ??
-                        'https://drive.google.com/file/d/1MJo1yoE4mUXqBwp8zFuLDLLhrAHwmvEE/view?usp=drive_link';
-                  });
-                },
-              );
-            },
+                  value: _imageTypes[index],
+                  groupValue: imgUrl,
+                  onChanged: (String? value) {
+                    setState(() {
+                      if (value != null) {
+                        imgUrl = value;
+                        selectedIndex = index;
+                        updateImage(value); // Update the image in your service
+                        Navigator.of(context)
+                            .pop(); // Close the dialog after selection
+                      }
+                    });
+                  },
+                );
+              },
+            ),
           ),
           actions: [
             TextButton(
@@ -228,11 +233,11 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
   Widget _infoRow(IconData icon, String title, String content) {
     return GestureDetector(
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+        padding: EdgeInsets.all(7),
         decoration: BoxDecoration(
-          border: Border.symmetric(
-              horizontal: BorderSide(color: Color(0xFF1EA5FC), width: 0.2)),
-          borderRadius: BorderRadius.circular(0.0), // Bo góc viền
+          color: const Color.fromARGB(255, 239, 239, 239),
+          // border: Border.all(width: 0.5),
+          borderRadius: BorderRadius.circular(5.0), // Bo góc viền
         ),
         child: Row(
           children: [
@@ -339,21 +344,21 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                     children: [
                       _infoRow(Icons.camera, "Profile Image", "Image"),
                       SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       _infoRow(Icons.person, "Profile Name",
                           data['name'] ?? 'No namw'),
                       SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       _infoRow(Icons.schedule, "Birthday",
                           data['birthday'] ?? 'No namw'),
                       SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       _infoRow(Icons.home, "Address", data['address']),
                       SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       _infoRow(Icons.phone, "Phone Num",
                           data['phoneNum'] ?? 'No phone'),
@@ -361,24 +366,27 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                         height: 20,
                       ),
                       GestureDetector(
-                        child: Row(
-                          children: [
-                            Icon(Icons.logout, size: 30, color: Colors.red),
-                            SizedBox(
-                              width: 30,
-                            ),
-                            Column(
-                              children: [
-                                Text(
-                                  "Đăng xuất",
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Row(
+                            children: [
+                              Icon(Icons.logout, size: 30, color: Colors.red),
+                              SizedBox(
+                                width: 30,
+                              ),
+                              Column(
+                                children: [
+                                  Text(
+                                    "Đăng xuất",
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            )
-                          ],
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                         onTap: () {
                           showSignoutConformDialog(context);
