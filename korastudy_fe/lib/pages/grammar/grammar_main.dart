@@ -20,7 +20,9 @@ class _GrammarMainState extends State<GrammarMain> {
           children: [
             _buildHeader(),
             SizedBox(height: 20),
-            SearchInput(),
+            SearchInput(
+              onSearchResult: (Widget) {},
+            ),
             SizedBox(height: 20),
             _buildTopButtons(),
             SizedBox(height: 20),

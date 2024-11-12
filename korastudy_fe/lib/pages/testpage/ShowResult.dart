@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
 class ShowResultScreen extends StatefulWidget {
-  const ShowResultScreen({Key? key}) : super(key: key);
+  final List<Map<String, dynamic>> results; // Thêm biến results
+
+  const ShowResultScreen({Key? key, required this.results}) : super(key: key);
 
   @override
   _ShowResultScreenState createState() => _ShowResultScreenState();
 }
 
-class _ShowResultScreenState extends State<ShowResultScreen> with TickerProviderStateMixin {
+class _ShowResultScreenState extends State<ShowResultScreen>
+    with TickerProviderStateMixin {
   late TabController _tabController;
   int _tabIndex = 0;
 
@@ -132,16 +135,11 @@ class _ShowResultScreenState extends State<ShowResultScreen> with TickerProvider
   }
 
   Widget _buildResultList(BuildContext context, {bool? showCorrect}) {
-    final List<Map<String, dynamic>> results = [
-      {'question': 'Câu hỏi 1', 'correct': true, 'answer': 'A', 'score': 10},
-      {'question': 'Câu hỏi 2', 'correct': false, 'answer': 'B', 'score': 0},
-      {'question': 'Câu hỏi 3', 'correct': true, 'answer': 'C', 'score': 10},
-      {'question': 'Câu hỏi 4', 'correct': false, 'answer': 'D', 'score': 0},
-    ];
-
     final filteredResults = showCorrect == null
-        ? results
-        : results.where((result) => result['correct'] == showCorrect).toList();
+        ? widget.results
+        : widget.results
+            .where((result) => result['correct'] == showCorrect)
+            .toList();
 
     return ListView.builder(
       padding: EdgeInsets.all(16),
@@ -150,16 +148,25 @@ class _ShowResultScreenState extends State<ShowResultScreen> with TickerProvider
         final result = filteredResults[index];
         return _buildResultItem(
           context,
-          result['question'],
+          index + 1, // Truyền số thứ tự câu hỏi
+          result['question'] ?? 'N/A', // Xử lý giá trị null
           result['correct'],
-          result['answer'],
+          result['answer'] ?? 'N/A', // Xử lý giá trị null
+          result['correctAnswer'] ?? 'N/A', // Xử lý giá trị null
           result['score'],
         );
       },
     );
   }
 
-  Widget _buildResultItem(BuildContext context, String question, bool correct, String answer, int score) {
+  Widget _buildResultItem(
+      BuildContext context,
+      int questionNumber,
+      String question,
+      bool correct,
+      String answer,
+      String correctAnswer,
+      int score) {
     return Card(
       margin: EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
@@ -171,16 +178,49 @@ class _ShowResultScreenState extends State<ShowResultScreen> with TickerProvider
             size: 24,
           ),
         ),
-        title: Text(question),
-        subtitle: Text('Đáp án đúng: $answer'),
+        title: Text('Câu $questionNumber'), // Hiển thị số thứ tự câu hỏi
+        subtitle: Text('Đáp án của bạn: $answer'),
         trailing: Text('Điểm: $score'),
+        onTap: () {
+          _showQuestionDialog(
+              context, question, correct, answer, correctAnswer);
+        },
       ),
     );
   }
-}
 
-void main() {
-  runApp(MaterialApp(
-    home: ShowResultScreen(),
-  ));
+  void _showQuestionDialog(BuildContext context, String question, bool correct,
+      String answer, String correctAnswer) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Chi tiết câu hỏi'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Câu hỏi: $question'),
+              SizedBox(height: 8),
+              Text('Đáp án của bạn: $answer'),
+              SizedBox(height: 8),
+              Text('Kết quả: ${correct ? "Đúng" : "Sai"}'),
+              if (!correct) ...[
+                SizedBox(height: 8),
+                Text('Đáp án đúng: $correctAnswer'),
+              ],
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Đóng'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

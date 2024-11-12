@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "736538351274",
+    "project_id": "korastudy-9b3d5",
+    "storage_bucket": "korastudy-9b3d5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:736538351274:android:7f630ae85e0235682662d3",
+        "android_client_info": {
+          "package_name": "com.example.korastudy_fe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "736538351274-0f38m2154qbtghodm8amp6vun7ps428e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.korastudy_fe",
+            "certificate_hash": "8e9dd9122cdf2c2b193a3625b1a0e2186cc51358"
+          }
+        },
+        {
+          "client_id": "736538351274-ge353d1fn204ccppgf567claphrbebbt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUrEy1FaUD9UlxYdi68cuh52KceCDeJBg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "736538351274-ge353d1fn204ccppgf567claphrbebbt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "736538351274-pqmg9anjp0luodoav1h5tokk1mp3n20h.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.korastudyFe"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

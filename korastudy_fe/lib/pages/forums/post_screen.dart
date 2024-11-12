@@ -3,7 +3,11 @@ import 'package:korastudy_fe/pages/forums/post_comment_screen.dart';
 import 'package:korastudy_fe/pages/forums/post_detail_screen.dart';
 
 class PostScreen extends StatelessWidget {
-  const PostScreen({super.key});
+  final String postId;
+
+  PostScreen({
+    required this.postId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +43,10 @@ class PostScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            PostDetailScreen(),
-            PostCommentScreen(),
+            PostDetailScreen(postId: postId),
+            PostCommentScreen(
+              postId: postId,
+            ),
           ],
         ),
       ),

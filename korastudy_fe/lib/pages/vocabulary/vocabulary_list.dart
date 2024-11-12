@@ -1,12 +1,29 @@
+// lib/pages/vocabulary/vocabulary_list.dart
 import 'package:flutter/material.dart';
-import 'package:korastudy_fe/pages/vocabulary/dictionary_verb.dart';
-import 'package:korastudy_fe/pages/vocabulary/flashcard.dart';
+import 'package:korastudy_fe/models/vocabulary_model.dart';
 import 'package:korastudy_fe/pages/vocabulary/test_splash.dart';
+import 'package:korastudy_fe/services/firestore_service.dart';
 import 'package:korastudy_fe/pages/vocabulary/vocabulary_list_mean.dart';
+import 'package:korastudy_fe/pages/vocabulary/dictionary_verb.dart';
 
-class Vocabulary_listWidget extends StatelessWidget {
+class VocabularyListWidget extends StatefulWidget {
+  @override
+  _VocabularyListWidgetState createState() => _VocabularyListWidgetState();
+}
+
+class _VocabularyListWidgetState extends State<VocabularyListWidget> {
+  final FirestoreService _firestoreService = FirestoreService();
+  late Future<List<VocabularySet>> _vocabularySets;
+
+  @override
+  void initState() {
+    super.initState();
+    _vocabularySets = _firestoreService.getVocabularySets();
+  }
+
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -191,40 +208,43 @@ class Vocabulary_listWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              buildLessonCard(context, 'Bài 1A : Giới \nThiệu'),
-                              buildLessonCard(context, 'Bài 1B : Giới \nThiệu'),
-                              buildLessonCard(context, 'Bài 2 : \nTrường học'),
-                            ],
-                          ),
-                          SizedBox(height: 15),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              buildLessonCard(context, 'Bài 3 : sinh \nhoạt'),
-                              buildLessonCard(
-                                  context, 'Bài4A : Thứ\nngày,Tháng'),
-                              buildLessonCard(
-                                  context, 'Bài4A : Thứ \nngày,Tháng'),
-                            ],
-                          ),
-                          SizedBox(height: 15),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              buildLessonCard(
-                                  context, 'Bài 5A : Nghề \nNghiệp'),
-                              buildLessonCard(context, 'Bài 5B:Nghề \nThiệu'),
-                              buildLessonCard(context, 'Bài 6 : Sở \nThích'),
-                            ],
-                          ),
-                        ],
+                    Container(
+                      height: screenHeight * 0.7,
+                      child: FutureBuilder<List<VocabularySet>>(
+                        future: _vocabularySets,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(
+                                child: Text('Lỗi: ${snapshot.error}'));
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
+                            return Center(child: Text('Không có dữ liệu'));
+                          } else {
+                            return GridView.builder(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3, // Số cột trong lưới
+                                crossAxisSpacing:
+                                    10.0, // Khoảng cách giữa các cột
+                                mainAxisSpacing:
+                                    10.0, // Khoảng cách giữa các hàng
+                                childAspectRatio:
+                                    0.75, // Tỉ lệ chiều rộng/chiều cao của các ô
+                              ),
+                              padding: EdgeInsets.all(10.0),
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (context, index) {
+                                final vocabularySet = snapshot.data![index];
+                                return buildLessonCard(context, vocabularySet);
+                              },
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                            );
+                          }
+                        },
                       ),
                     ),
                   ],
@@ -232,80 +252,78 @@ class Vocabulary_listWidget extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(
-            bottom: 16,
-            right: 16,
-            child: Container(
-              padding: EdgeInsets.all(8),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      // Xử lý sự kiện khi nhấn vào biểu tượng quiz
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                TestPage()), // Replace with your next page
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(50),
-                    child: CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.lightBlue,
-                      child: Icon(
-                        Icons.headset, // Icon hình câu hỏi
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16), // Khoảng cách giữa các biểu tượng
-                  InkWell(
-                    onTap: () {
-                      // Xử lý sự kiện khi nhấn vào biểu tượng quiz
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                FlashcardPage()), // Replace with your next page
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(50),
-                    child: CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.lightBlue,
-                      child: Icon(
-                        Icons.quiz, // Icon hình câu hỏi
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
+          // Positioned(
+          //   bottom: 16,
+          //   right: 16,
+          //   child: Container(
+          //     padding: EdgeInsets.all(8),
+          //     child: Column(
+          //       mainAxisSize: MainAxisSize.min,
+          //       children: [
+          //         InkWell(
+          //           onTap: () {
+          //             // Xử lý sự kiện khi nhấn vào biểu tượng quiz
+          //             Navigator.push(
+          //               context,
+          //               MaterialPageRoute(
+          //                   builder: (context) =>
+          //                       TestPage()), // Replace with your next page
+          //             );
+          //           },
+          //           borderRadius: BorderRadius.circular(50),
+          //           child: CircleAvatar(
+          //             radius: 30,
+          //             backgroundColor: Colors.lightBlue,
+          //             child: Icon(
+          //               Icons.headset, // Icon hình câu hỏi
+          //               color: Colors.white,
+          //               size: 30,
+          //             ),
+          //           ),
+          //         ),
+          //         SizedBox(height: 16), // Khoảng cách giữa các biểu tượng
+          //         InkWell(
+          //           onTap: () {
+          //             // Xử lý sự kiện khi nhấn vào biểu tượng quiz
+          //             Navigator.push(
+          //               context,
+          //               MaterialPageRoute(
+          //                   builder: (context) =>
+          //                       FlashcardPage()), // Replace with your next page
+          //             );
+          //           },
+          //           borderRadius: BorderRadius.circular(50),
+          //           child: CircleAvatar(
+          //             radius: 30,
+          //             backgroundColor: Colors.lightBlue,
+          //             child: Icon(
+          //               Icons.quiz, // Icon hình câu hỏi
+          //               color: Colors.white,
+          //               size: 30,
+          //             ),
+          //           ),
+          //         )
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
   }
 
-  Widget buildLessonCard(BuildContext context, String title) {
+  Widget buildLessonCard(BuildContext context, VocabularySet vocabularySet) {
     return InkWell(
       onTap: () {
-        // Add your navigation code here!
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  Vocabulary_list_meanWidget()), // Replace AnotherPage with your target page
+            builder: (context) =>
+                VocabularyListMeanWidget(setId: vocabularySet.id),
+          ),
         );
       },
       child: Container(
-        width: 115,
-        height: 175,
         padding: EdgeInsets.all(8), // Add padding to avoid overflow
         decoration: BoxDecoration(
           color: Color.fromRGBO(255, 255, 255, 1),
@@ -339,7 +357,7 @@ class Vocabulary_listWidget extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text(
-              title,
+              vocabularySet.name,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color.fromRGBO(0, 0, 0, 1),

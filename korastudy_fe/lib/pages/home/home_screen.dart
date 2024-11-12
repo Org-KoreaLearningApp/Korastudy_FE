@@ -6,6 +6,7 @@ import 'package:korastudy_fe/pages/home/main_content/card_friend.dart';
 import 'package:korastudy_fe/pages/home/main_content/fulltest_content.dart';
 import 'package:korastudy_fe/pages/home/main_content/new_update_content.dart';
 import 'package:korastudy_fe/pages/home/main_content/practice_content.dart';
+import 'package:korastudy_fe/pages/home/notification/notification_screen.dart';
 import 'package:korastudy_fe/pages/profile/profile_screen.dart';
 import 'package:korastudy_fe/pages/testpage/ListTest.dart';
 import 'package:korastudy_fe/pages/welcome/topik_chose_page.dart';
@@ -39,26 +40,44 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageStorage(
-        child: currentScreen,
-        bucket: bucket,
-      ),
-      floatingActionButton: Transform.translate(
-        offset: Offset(0, 30),
-        child: FloatingActionButton(
-          backgroundColor: Colors.blue,
-          child: Icon(
-            Icons.add_box,
-            color: Colors.white,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TopikChosePageWidget(),
           ),
-          onPressed: () {},
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: NavBar(
-        currentIndex: _currentIndex,
-        onTabSelected: _onTabSelected,
+        );
+        return false; // Ngăn không cho thoát ứng dụng khi nhấn back
+      },
+      child: Stack(
+        children: [
+          Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: PageStorage(
+              child: currentScreen,
+              bucket: bucket,
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            bottomNavigationBar: NavBar(
+              currentIndex: _currentIndex,
+              onTabSelected: _onTabSelected,
+            ),
+          ),
+          Positioned(
+            bottom: 20,
+            left: MediaQuery.of(context).size.width / 2 - 28,
+            child: FloatingActionButton(
+              backgroundColor: Colors.blue,
+              child: Icon(
+                Icons.add_box,
+                color: Colors.white,
+              ),
+              onPressed: () {},
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -121,13 +140,24 @@ class HomeContent extends StatelessWidget {
                           height: 1,
                         ),
                       ),
-                      CircleAvatar(
-                        backgroundColor: Colors.lightBlue[400],
-                        radius: 22,
-                        child: Icon(
-                          Icons.notifications_none,
-                          color: Colors.white,
-                          size: 20,
+                      GestureDetector(
+                        onTap: () {
+                          // Thêm sự kiện onPressed để chuyển hướng đến trang Notification
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NotificationWidget(),
+                            ),
+                          );
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: Colors.lightBlue[400],
+                          radius: 22,
+                          child: Icon(
+                            Icons.notifications_none,
+                            color: Colors.white,
+                            size: 20,
+                          ),
                         ),
                       ),
                     ],

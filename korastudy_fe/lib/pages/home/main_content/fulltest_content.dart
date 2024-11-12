@@ -10,57 +10,33 @@ class _FulltestContentState extends State<FulltestContent> {
   final List<Map<String, String>> updates = [
     {
       'title': 'Topik 3 Khóa học online hay',
-      'subtitle': 'Minh Quang',
       'date': '13/05/2024 00:00',
       'imagePath': 'assets/images/Learnnew3.jpg',
+      'id': '1', // Cần thêm id cho mỗi item
     },
     {
       'title': 'Topik 3 Khóa học online hay và hấp dẫn',
-      'subtitle': 'Phan Tứ',
       'date': '14/05/2024 00:00',
       'imagePath': 'assets/images/Learnnew3.jpg',
+      'id': '2',
     },
     {
       'title': 'Topik 3 Khóa học online hay và bổ ích',
-      'subtitle': 'Quân Hùng',
       'date': '14/05/2024 00:00',
       'imagePath': 'assets/images/Learnnew3.jpg',
+      'id': '3',
     },
     {
       'title': 'Topik 3 Khóa học online hay và bổ ích',
-      'subtitle': 'Quân Hùng',
       'date': '14/05/2024 00:00',
       'imagePath': 'assets/images/Learnnew3.jpg',
-    },
-    {
-      'title': 'Topik 3 Khóa học online hay và bổ ích',
-      'subtitle': 'Quân Hùng',
-      'date': '14/05/2024 00:00',
-      'imagePath': 'assets/images/Learnnew3.jpg',
+      'id': '4',
     },
     {
       'title': 'Topik 3 Khóa học online hay và hấp dẫn',
-      'subtitle': 'Phan Tứ',
-      'date': '14/05/2024 00:00',
+      'date': '15/05/2024 00:00',
       'imagePath': 'assets/images/Learnnew3.jpg',
-    },
-    {
-      'title': 'Topik 3 Khóa học online hay và hấp dẫn',
-      'subtitle': 'Phan Tứ',
-      'date': '14/05/2024 00:00',
-      'imagePath': 'assets/images/Learnnew3.jpg',
-    },
-    {
-      'title': 'Topik 3 Khóa học online hay và hấp dẫn',
-      'subtitle': 'Phan Tứ',
-      'date': '14/05/2024 00:00',
-      'imagePath': 'assets/images/Learnnew3.jpg',
-    },
-    {
-      'title': 'Topik 3 Khóa học online hay và hấp dẫn',
-      'subtitle': 'Phan Tứ',
-      'date': '14/05/2024 00:00',
-      'imagePath': 'assets/images/Learnnew3.jpg',
+      'id': '5',
     },
   ];
 
@@ -157,9 +133,9 @@ class _FulltestContentState extends State<FulltestContent> {
               ),
               child: FrameSlideComponent(
                 title: update['title']!,
-                subtitle: update['subtitle']!,
-                date: update['date']!,
+                createAt: update['date']!, // Dùng 'date' thay vì 'createAt'
                 imagePath: update['imagePath']!,
+                id: update['id']!, // Thêm id vào đây
               ),
             ),
           );

@@ -10,45 +10,46 @@ class _NewUpdateState extends State<NewUpdate> {
   final List<Map<String, String>> updates = [
     {
       'title': 'Topik 3 Khóa học online hay',
-      'subtitle': 'Minh Quang',
       'date': '13/05/2024 00:00',
       'imagePath': 'assets/images/Learnnew3.jpg',
+      'id': '1', // Cần thêm id cho mỗi item
     },
     {
       'title': 'Topik 3 Khóa học online hay',
-      'subtitle': 'Minh Quang',
       'date': '14/05/2024 00:00',
       'imagePath': 'assets/images/Learnnew3.jpg',
+      'id': '2',
     },
     {
       'title': 'Topik 3 Khóa học online hay',
-      'subtitle': 'Minh Quang',
       'date': '14/05/2024 00:00',
       'imagePath': 'assets/images/Learnnew3.jpg',
+      'id': '3',
     },
     {
       'title': 'Topik 3 Khóa học online hay',
-      'subtitle': 'Minh Quang',
       'date': '14/05/2024 00:00',
       'imagePath': 'assets/images/Learnnew3.jpg',
+      'id': '4',
     },
     {
       'title': 'Topik 3 Khóa học online hay',
-      'subtitle': 'Minh Quang',
       'date': '15/05/2024 00:00',
       'imagePath': 'assets/images/Learnnew3.jpg',
+      'id': '5',
     },
     {
       'title': 'Topik 3 Khóa học online hay',
-      'subtitle': 'Minh Quang',
       'date': '16/05/2024 00:00',
       'imagePath': 'assets/images/Learnnew3.jpg',
+      'id': '6',
     },
   ];
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 300,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -138,9 +139,9 @@ class _NewUpdateState extends State<NewUpdate> {
               ),
               child: FrameSlideComponent(
                 title: update['title']!,
-                subtitle: update['subtitle']!,
-                date: update['date']!,
+                createAt: update['date']!, // Dùng 'date' thay vì 'createAt'
                 imagePath: update['imagePath']!,
+                id: update['id']!, // Thêm id vào đây
               ),
             ),
           );

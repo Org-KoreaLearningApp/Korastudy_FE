@@ -59,7 +59,9 @@ class SearchScreen extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(height: 16), // Thay đổi khoảng cách ở đây
-          SearchInput(),
+          // SearchInput(
+          //   onSearchResult: (Widget) {},
+          // ),
           Expanded(
             child: ListView.builder(
               itemCount: searchResults.length,

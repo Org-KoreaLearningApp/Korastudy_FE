@@ -1,7 +1,42 @@
+// lib/pages/vocabulary/vocabulary_list_mean.dart
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/models/vocabulary_model.dart';
+import 'package:korastudy_fe/services/firestore_service.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:korastudy_fe/widgets/note_dialog.dart';
+import 'package:korastudy_fe/pages/vocabulary/flashcard.dart';
 
-class Vocabulary_list_meanWidget extends StatelessWidget {
+class VocabularyListMeanWidget extends StatefulWidget {
+  final String setId;
+
+  VocabularyListMeanWidget({required this.setId});
+
+  @override
+  _VocabularyListMeanWidgetState createState() =>
+      _VocabularyListMeanWidgetState();
+}
+
+class _VocabularyListMeanWidgetState extends State<VocabularyListMeanWidget> {
+  final FirestoreService _firestoreService = FirestoreService();
+  late Future<List<Vocabulary>> _vocabularyList;
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+    _vocabularyList = _firestoreService.getVocabularies(widget.setId);
+  }
+
+  void _playAudio(String url) async {
+    try {
+      print('Playing audio from URL: $url');
+      await _audioPlayer.play(UrlSource(url));
+      print('Audio playback started successfully');
+    } catch (e) {
+      print('Error playing audio: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -10,11 +45,7 @@ class Vocabulary_list_meanWidget extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(70, 160, 229, 1),
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            size: 30,
-            color: Colors.white,
-          ),
+          icon: Icon(Icons.arrow_back, size: 30, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -28,39 +59,53 @@ class Vocabulary_list_meanWidget extends StatelessWidget {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.quiz, size: 30, color: Colors.white),
+            onPressed: () async {
+              List<Vocabulary> vocabularies = await _vocabularyList;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      FlashcardPage(vocabularies: vocabularies),
+                ),
+              );
+            },
+          ),
+        ],
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            buildVocabularyCard(
-                '한국', 'Korea', screenWidth, screenHeight, context),
-            SizedBox(height: screenHeight * 0.02),
-            buildVocabularyCard(
-                '베트남', 'Vietnam', screenWidth, screenHeight, context),
-            SizedBox(height: screenHeight * 0.02),
-            buildVocabularyCard(
-                '미국', 'USA', screenWidth, screenHeight, context),
-            SizedBox(height: screenHeight * 0.02),
-            buildVocabularyCard('영국', 'UK', screenWidth, screenHeight, context),
-            SizedBox(height: screenHeight * 0.02),
-            buildVocabularyCard('영국', 'UK', screenWidth, screenHeight, context),
-            SizedBox(height: screenHeight * 0.02),
-            buildVocabularyCard('영국', 'UK', screenWidth, screenHeight, context),
-            SizedBox(height: screenHeight * 0.02),
-            buildVocabularyCard('영국', 'UK', screenWidth, screenHeight, context),
-            SizedBox(height: screenHeight * 0.02),
-            buildVocabularyCard('영국', 'UK', screenWidth, screenHeight, context),
-            SizedBox(height: screenHeight * 0.02),
-            buildVocabularyCard('영국', 'UK', screenWidth, screenHeight, context),
-            SizedBox(height: screenHeight * 0.02),
-          ],
-        ),
+      body: FutureBuilder<List<Vocabulary>>(
+        future: _vocabularyList,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Lỗi: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('Không có dữ liệu'));
+          } else {
+            return SingleChildScrollView(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                children: snapshot.data!.map((vocabulary) {
+                  return Column(
+                    children: [
+                      buildVocabularyCard(
+                          vocabulary, screenWidth, screenHeight, context),
+                      SizedBox(height: screenHeight * 0.02),
+                    ],
+                  );
+                }).toList(),
+              ),
+            );
+          }
+        },
       ),
     );
   }
 
-  Widget buildVocabularyCard(String word, String meaning, double screenWidth,
+  Widget buildVocabularyCard(Vocabulary vocabulary, double screenWidth,
       double screenHeight, BuildContext context) {
     return Container(
       width: screenWidth * 0.95,
@@ -97,8 +142,14 @@ class Vocabulary_list_meanWidget extends StatelessWidget {
                         borderRadius: BorderRadius.all(Radius.elliptical(
                             screenWidth * 0.13, screenWidth * 0.13)),
                       ),
-                      child: Icon(Icons.volume_up,
-                          color: Colors.white), // Speaker icon
+                      child: IconButton(
+                        icon: Icon(Icons.volume_up,
+                            color: Colors.white), // Speaker icon
+                        onPressed: () {
+                          print('Audio URL: ${vocabulary.audioUrl}');
+                          _playAudio(vocabulary.audioUrl);
+                        },
+                      ),
                     ),
                   ),
                 ],
@@ -131,7 +182,7 @@ class Vocabulary_list_meanWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Text(
-                          word,
+                          vocabulary.word,
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: Color.fromRGBO(0, 0, 0, 1),
@@ -154,7 +205,7 @@ class Vocabulary_list_meanWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Text(
-                          meaning,
+                          vocabulary.meaning,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Color.fromRGBO(0, 0, 0, 1),

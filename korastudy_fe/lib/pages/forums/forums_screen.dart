@@ -16,9 +16,9 @@ class _ForumScreenState extends State<ForumScreen> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        backgroundColor: Colors.white, // Đặt màu nền cho toàn bộ màn hình
+        backgroundColor: Colors.white, // Đặt màu nền của Scaffold thành trắng
         appBar: AppBar(
-          automaticallyImplyLeading: false,
+          automaticallyImplyLeading: false, // Loại bỏ mũi tên back
           title: Text(
             'Forum',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),

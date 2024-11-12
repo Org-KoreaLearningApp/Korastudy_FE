@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:korastudy_fe/pages/testpage/DetailResult.dart';
 import 'package:korastudy_fe/pages/testpage/ShowResult.dart';
+import 'package:korastudy_fe/pages/testpage/ListTest.dart';
 
 class ResultsScreen extends StatelessWidget {
-  const ResultsScreen({Key? key}) : super(key: key);
+  final int totalScore;
+  final int listeningScore;
+  final int readingScore;
+  final List<Map<String, dynamic>> results; // Thêm biến results
+
+  const ResultsScreen({
+    Key? key,
+    required this.totalScore,
+    required this.listeningScore,
+    required this.readingScore,
+    required this.results, // Thêm biến results
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final int totalScore = 110;
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: _buildAppBar(context),
-        body: _buildBody(context, totalScore),
+        body: _buildBody(context),
         bottomNavigationBar: _buildActionsSection(context),
       ),
     );
@@ -35,7 +45,10 @@ class ResultsScreen extends StatelessWidget {
             size: 26,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => ListTestWidget()),
+            );
           },
         ),
       ),
@@ -52,34 +65,156 @@ class ResultsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBody(BuildContext context, int totalScore) {
+  Widget _buildBody(BuildContext context) {
     return SingleChildScrollView(
-      child: SizedBox(
+      child: Center(
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 50),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Text(
+                      "한국어능력시험 성적증명서\nOFFICIAL TOPIK SCORE REPORT",
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(height: 44),
+                    _buildTestResultsSection(context),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTestResultsSection(BuildContext context) {
+    return Center(
+      child: Container(
         width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.black, width: 0.5),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.25),
+              spreadRadius: 2,
+              blurRadius: 2,
+              offset: Offset(4, 4),
+            ),
+          ],
+        ),
         child: Column(
-          mainAxisSize: MainAxisSize.max,
+          mainAxisSize: MainAxisSize.min,
           children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "시험 결과 (Test Result)",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildResultColumn("영역\nSection"),
+                  _buildResultColumn("점수\nScore"),
+                  _buildResultColumn("총점\nTotal Score"),
+                ],
+              ),
+            ),
+            SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        _buildResultRow(
+                            "듣기 \nListening", "$listeningScore/100"),
+                        _buildResultRow("읽기 \nReading", "$readingScore/100"),
+                      ],
+                    ),
+                  ),
+                  _buildTotalScoreColumn("$totalScore/200"),
+                ],
+              ),
+            ),
+            SizedBox(height: 22),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 50),
+              margin: EdgeInsets.symmetric(horizontal: 50),
+              padding: EdgeInsets.symmetric(horizontal: 44),
               child: Column(
-                mainAxisSize: MainAxisSize.max,
                 children: [
                   Text(
-                    "한국어능력시험 성적증명서\nOFFICIAL TOPIK SCORE REPORT",
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                    "총 점수 $totalScore 자격을 갖춘 (Pass score: $totalScore)",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 20,
+                      fontSize: 15,
                       fontFamily: 'Inter',
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
-                  SizedBox(height: 44),
-                  _buildTestResultsSection(context, totalScore),
+                  SizedBox(height: 22),
+                  _buildPassStatusButton(context),
                 ],
+              ),
+            ),
+            SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildResultColumn(String text) {
+    return Expanded(
+      child: Container(
+        height: 46,
+        padding: EdgeInsets.symmetric(vertical: 6),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black, width: 0.75),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              text,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 10,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
               ),
             ),
           ],
@@ -88,148 +223,33 @@ class ResultsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTestResultsSection(BuildContext context, int totalScore) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.black, width: 0.5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.25),
-            spreadRadius: 2,
-            blurRadius: 2,
-            offset: Offset(4, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "시험 결과 (Test Result)",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          SizedBox(height: 8),
-          SizedBox(
-            width: double.infinity,
-            child: Row(
-              children: [
-                _buildResultColumn("영역\nSection"),
-                _buildResultColumn("점수\nScore"),
-                _buildResultColumn("총점\nTotal Score"),
-                _buildResultColumn("등급\nLevel"),
-              ],
-            ),
-          ),
-          SizedBox(height: 8),
-          SizedBox(
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      _buildResultRow("듣기 \nListening", "25/100"),
-                      _buildResultRow("읽기 \nReading", "25/100"),
-                    ],
-                  ),
-                ),
-                _buildTotalScoreColumn("50/200"),
-                _buildTotalScoreColumn("X"),
-              ],
-            ),
-          ),
-          SizedBox(height: 22),
-          Container(
-            width: double.infinity,
-            margin: EdgeInsets.symmetric(horizontal: 50),
-            padding: EdgeInsets.symmetric(horizontal: 44),
-            child: Column(
-              children: [
-                Text(
-                  "총 점수 $totalScore 자격을 갖춘 (Pass score: $totalScore)",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                SizedBox(height: 22),
-                _buildPassStatusButton(context),
-              ],
-            ),
-          ),
-          SizedBox(height: 8),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildResultColumn(String text) {
-    return Container(
-      width: 83,
-      height: 46,
-      padding: EdgeInsets.symmetric(vertical: 6),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 0.75),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            text,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 10,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildResultRow(String section, String score) {
     return SizedBox(
       width: double.infinity,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            width: 84,
-            height: 46,
-            padding: EdgeInsets.symmetric(vertical: 6),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 1),
-            ),
-            child: Column(
-              children: [
-                Text(
-                  section,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 10,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w400,
+          Expanded(
+            child: Container(
+              height: 46,
+              padding: EdgeInsets.symmetric(vertical: 6),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 1),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    section,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 10,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           _buildScoreButton(score),
@@ -239,21 +259,22 @@ class ResultsScreen extends StatelessWidget {
   }
 
   Widget _buildScoreButton(String score) {
-    return Container(
-      width: 83,
-      height: 46,
-      padding: EdgeInsets.symmetric(vertical: 6),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 1),
-      ),
-      child: Text(
-        score,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 10,
-          fontFamily: 'Inter',
-          fontWeight: FontWeight.w400,
+    return Expanded(
+      child: Container(
+        height: 46,
+        padding: EdgeInsets.symmetric(vertical: 6),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black, width: 1),
+        ),
+        child: Text(
+          score,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 10,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+          ),
         ),
       ),
     );
@@ -301,7 +322,7 @@ class ResultsScreen extends StatelessWidget {
         ),
         onPressed: () {},
         child: Text(
-          "Not Passed",
+          totalScore >= 140 ? "Pass" : "Not Passed",
           style: TextStyle(
             color: Colors.black,
             fontSize: 16,
@@ -351,7 +372,9 @@ class ResultsScreen extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ShowResultScreen()),
+            MaterialPageRoute(
+                builder: (context) => ShowResultScreen(
+                    results: results)), // Truyền dữ liệu results
           );
         },
         child: Text(
@@ -383,7 +406,10 @@ class ResultsScreen extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => DetailResultWidget()),
+            MaterialPageRoute(
+                builder: (context) => DetailResultWidget(
+                      results: results,
+                    )),
           );
         },
         child: Text(
