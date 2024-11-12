@@ -1,45 +1,266 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'TestPageFinal.dart'; // Import trang cuối
+import 'TestPageResults.dart';
 
 class TestPageChooseWidget extends StatefulWidget {
+  final String testId; // Nhận testId từ trang ListTest
+
+  TestPageChooseWidget({required this.testId});
+
   @override
   _TestPageChooseWidgetState createState() => _TestPageChooseWidgetState();
 }
 
 class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
-  String? _selectedAnswer; // Cho phép giá trị null
-  final String _correctAnswer = 'A'; // Đáp án đúng
-  int _currentPage = 0; // Trang hiện tại
-  final int _totalPages = 3; // Tổng số trang kiểm tra
+  List<Question> _questions = [];
+  List<String?> _selectedAnswers = [];
+  int _currentPage = 0;
+  int _lastListeningPage = 0;
   PageController _pageController = PageController();
+  AudioPlayer _audioPlayer = AudioPlayer();
+  String _audioUrl = '';
+  Duration _audioDuration = Duration.zero;
+  Duration _audioPosition = Duration.zero;
+  Timer? _timer;
+  Duration _remainingTime = Duration(minutes: 90);
+  bool _readingDialogShown = false;
+  int _totalScore = 0;
+  int _listeningScore = 0;
+  int _readingScore = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadQuestions();
+    _audioPlayer.onDurationChanged.listen((Duration duration) {
+      setState(() {
+        _audioDuration = duration;
+      });
+    });
+    _audioPlayer.onPositionChanged.listen((Duration position) {
+      setState(() {
+        _audioPosition = position;
+      });
+    });
+    _startTimer();
+    _pageController.addListener(() {
+      setState(() {
+        _currentPage = _pageController.page!.round();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.stop();
+    _timer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_remainingTime.inSeconds > 0) {
+          _remainingTime = _remainingTime - Duration(seconds: 1);
+        } else {
+          _timer?.cancel();
+          _showSubmitDialog();
+        }
+      });
+    });
+  }
+
+  Future<void> _loadQuestions() async {
+    try {
+      final testDoc = await FirebaseFirestore.instance
+          .collection('testpage')
+          .doc(widget.testId)
+          .get();
+
+      if (testDoc.exists) {
+        final testData = testDoc.data() as Map<String, dynamic>;
+        _audioUrl = testData['audioUrl'] ?? '';
+
+        final questionsSnapshot = await FirebaseFirestore.instance
+            .collection('testpage')
+            .doc(widget.testId) // Sử dụng testId để truy vấn câu hỏi
+            .collection('questions')
+            .orderBy(FieldPath.documentId)
+            .get();
+
+        if (questionsSnapshot.docs.isNotEmpty) {
+          setState(() {
+            _questions = questionsSnapshot.docs.map((doc) {
+              final data = doc.data() as Map<String, dynamic>;
+              return Question.fromJson(data);
+            }).toList();
+            _selectedAnswers = List<String?>.filled(_questions.length, null);
+
+            // Sắp xếp lại thứ tự câu hỏi theo trường order
+            _questions.sort((a, b) => a.order.compareTo(b.order));
+
+            // Phát audio nếu có URL
+            if (_audioUrl.isNotEmpty) {
+              _playAudio();
+            }
+          });
+
+          // Thêm thông báo debug
+          print('Questions loaded: ${_questions.length}');
+        } else {
+          print('No questions found');
+        }
+      } else {
+        print('Test document does not exist');
+      }
+    } catch (e) {
+      print('Error loading questions: $e');
+    }
+  }
+
+  Future<void> _playAudio() async {
+    await _audioPlayer.stop(); // Dừng audio hiện tại trước khi phát audio mới
+    if (_audioUrl.isNotEmpty) {
+      await _audioPlayer.play(UrlSource(_audioUrl));
+      print('Audio started playing');
+    }
+  }
 
   void _onAnswerSelected(String answer) {
     setState(() {
-      _selectedAnswer = answer;
+      _selectedAnswers[_currentPage] = answer;
     });
 
-    // Chuyển sang trang tiếp theo sau khi chọn đáp án
     Future.delayed(Duration(seconds: 1), () {
-      if (_currentPage < _totalPages - 1) {
+      if (_currentPage < _questions.length - 1) {
         setState(() {
           _currentPage++;
-          _selectedAnswer = null; // Reset đáp án đã chọn
         });
         _pageController.nextPage(
           duration: Duration(milliseconds: 300),
           curve: Curves.easeIn,
         );
-      } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => TestPageFinalWidget()),
-        );
+
+        // Kiểm tra nếu chuyển sang phần "reading"
+        if (_questions[_currentPage].questionType == 'reading' &&
+            !_readingDialogShown) {
+          _audioPlayer.stop();
+          _showReadingDialog();
+          _readingDialogShown = true;
+        }
+      } else if (_allQuestionsAnswered()) {
+        _calculateScore();
+        _showSubmitDialog();
       }
     });
   }
 
+  void _calculateScore() {
+    int totalScore = 0;
+    int listeningScore = 0;
+    int readingScore = 0;
+
+    for (int i = 0; i < _questions.length; i++) {
+      if (_selectedAnswers[i] == _questions[i].correctAnswer) {
+        totalScore += _questions[i].score;
+        if (_questions[i].questionType == 'listening') {
+          listeningScore += _questions[i].score;
+        } else if (_questions[i].questionType == 'reading') {
+          readingScore += _questions[i].score;
+        }
+      }
+    }
+
+    setState(() {
+      _totalScore = totalScore;
+      _listeningScore = listeningScore;
+      _readingScore = readingScore;
+    });
+  }
+
+  void _showReadingDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Thông báo'),
+        content:
+            Text('Bạn muốn chuyển qua 읽기. Audio nghe sẽ không được phát lại.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _pageController.jumpToPage(
+                  _lastListeningPage); // Quay lại câu nghe cuối cùng
+            },
+            child: Text('Hủy'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Tiếp tục'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  bool _allQuestionsAnswered() {
+    return !_selectedAnswers.contains(null);
+  }
+
+  void _showSubmitDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Bạn có muốn nộp bài?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('Hủy'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ResultsScreen(
+                          totalScore: _totalScore,
+                          listeningScore: _listeningScore,
+                          readingScore: _readingScore,
+                          results: _buildResults(), // Truyền tham số results
+                        )),
+              );
+              _audioPlayer.stop(); // Dừng audio khi nộp bài
+            },
+            child: Text('Đồng ý'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Map<String, dynamic>> _buildResults() {
+    List<Map<String, dynamic>> results = [];
+    for (int i = 0; i < _questions.length; i++) {
+      results.add({
+        'question': _questions[i].questionText,
+        'correct': _selectedAnswers[i] == _questions[i].correctAnswer,
+        'answer': _selectedAnswers[i] ?? '',
+        'score': _questions[i].score,
+        'correctAnswer': _questions[i].correctAnswer,
+      });
+    }
+    return results;
+  }
+
   Future<bool> _onWillPop() async {
-    return (await showDialog(
+    bool shouldPop = await showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: Text('Bạn có muốn thoát?'),
@@ -54,14 +275,18 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
               ),
             ],
           ),
-        )) ??
+        ) ??
         false;
+
+    if (shouldPop) {
+      _audioPlayer.stop(); // Dừng audio khi thoát
+    }
+
+    return shouldPop;
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size; // Lấy kích thước màn hình
-
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -77,7 +302,7 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
                     Text(
                       'Câu ${_currentPage + 1}',
                       style: TextStyle(
-                        color: Colors.white, // Đổi thành màu trắng
+                        color: Colors.black,
                         fontFamily: 'Inter',
                         fontSize: 20,
                         fontWeight: FontWeight.normal,
@@ -87,13 +312,12 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
                 ),
                 Row(
                   children: [
-                    Icon(Icons.access_time,
-                        color: Colors.white, size: 16), // Đổi thành màu trắng
+                    Icon(Icons.access_time, color: Colors.black, size: 16),
                     SizedBox(width: 4),
                     Text(
-                      '00:32',
+                      '${_remainingTime.inMinutes}:${(_remainingTime.inSeconds % 60).toString().padLeft(2, '0')}',
                       style: TextStyle(
-                        color: Colors.white, // Đổi thành màu trắng
+                        color: Colors.black,
                         fontFamily: 'Inter',
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
@@ -104,30 +328,37 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
               ],
             ),
             centerTitle: false,
-            iconTheme:
-                IconThemeData(color: Colors.white), // Đổi màu sắc nút back
           ),
         ),
-        body: Container(
-          width: screenSize.width,
-          height: screenSize.height,
-          color: Colors.white,
-          child: Column(
-            children: [
-              _buildProgressBar(),
-              Expanded(
-                child: PageView(
-                  controller: _pageController,
-                  physics: NeverScrollableScrollPhysics(),
-                  children: List.generate(
-                    _totalPages,
-                    (index) => _buildQuestionBox(index + 1, screenSize),
-                  ),
+        body: _questions.isEmpty
+            ? Center(child: CircularProgressIndicator())
+            : Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    _buildProgressBar(),
+                    if (_questions.isNotEmpty &&
+                        _questions[_currentPage].questionType == 'listening' &&
+                        _audioUrl.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: _buildAudioPlayer(audioUrl: _audioUrl),
+                      ),
+                    Expanded(
+                      child: PageView.builder(
+                        controller: _pageController,
+                        physics: BouncingScrollPhysics(),
+                        itemCount: _questions.length,
+                        itemBuilder: (context, index) {
+                          return _buildQuestionBox(_questions[index]);
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -138,7 +369,7 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
       height: 7,
       color: Color.fromRGBO(158, 205, 221, 1),
       child: FractionallySizedBox(
-        widthFactor: (_currentPage + 1) / _totalPages,
+        widthFactor: (_currentPage + 1) / _questions.length,
         child: Container(
           color: Color.fromRGBO(63, 204, 251, 1),
         ),
@@ -146,11 +377,10 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
     );
   }
 
-  Widget _buildQuestionBox(int questionNumber, Size screenSize) {
+  Widget _buildQuestionBox(Question question) {
     return Container(
-      margin: EdgeInsets.only(top: 65),
-      width: screenSize.width * 0.9, // Chiếm 90% chiều rộng màn hình
-      padding: EdgeInsets.symmetric(horizontal: 16), // Thêm padding
+      margin: EdgeInsets.only(top: 20),
+      width: 344,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
@@ -164,24 +394,23 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
       ),
       child: Column(
         children: [
-          _buildQuestionHeader(questionNumber),
-          _buildAnswerOptions(),
+          _buildQuestionHeader(question.questionText),
+          _buildAnswerOptions(question),
         ],
       ),
     );
   }
 
-  Widget _buildQuestionHeader(int questionNumber) {
+  Widget _buildQuestionHeader(String questionText) {
     return Container(
       width: double.infinity,
-      height: 89,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
         color: Color.fromRGBO(135, 185, 231, 1),
       ),
       padding: EdgeInsets.all(14),
       child: Text(
-        'Đây là câu hỏi số $questionNumber',
+        questionText,
         style: TextStyle(
           color: Colors.black,
           fontFamily: 'Inter',
@@ -192,15 +421,62 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
     );
   }
 
-  Widget _buildAnswerOptions() {
+  Widget _buildAudioPlayer({required String audioUrl}) {
+    return Container(
+      width: double.infinity,
+      height: 50,
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.black,
+        border: Border.all(color: Colors.black),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.play_arrow, color: Colors.white),
+            onPressed: () async {
+              await _audioPlayer.play(UrlSource(audioUrl));
+              print('Audio started playing');
+            },
+          ),
+          Text(
+            '${_audioPosition.inMinutes}:${(_audioPosition.inSeconds % 60).toString().padLeft(2, '0')} / ${_audioDuration.inMinutes}:${(_audioDuration.inSeconds % 60).toString().padLeft(2, '0')}',
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Inter',
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAnswerOptions(Question question) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildAnswerOption('A', 'Đáp án A'),
-        _buildAnswerOption('B', 'Đáp án B'),
-        _buildAnswerOption('C', 'Đáp án C'),
-        _buildAnswerOption('D', 'Đáp án D'),
+        _buildAnswerOption('A', question.choices['choiceA'] ?? ''),
+        _buildAnswerOption('B', question.choices['choiceB'] ?? ''),
+        _buildAnswerOption('C', question.choices['choiceC'] ?? ''),
+        _buildAnswerOption('D', question.choices['choiceD'] ?? ''),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton(
+            onPressed: _clearAnswer,
+            child: Text('Clear'),
+          ),
+        ),
       ],
     );
+  }
+
+  void _clearAnswer() {
+    setState(() {
+      _selectedAnswers[_currentPage] = null;
+    });
   }
 
   Widget _buildAnswerOption(String label, String text) {
@@ -208,34 +484,74 @@ class _TestPageChooseWidgetState extends State<TestPageChooseWidget> {
       onTap: () => _onAnswerSelected(label),
       child: Container(
         decoration: BoxDecoration(
-          color: _selectedAnswer == label ? Colors.yellow : Colors.transparent,
+          color: _selectedAnswers[_currentPage] == label
+              ? Colors.yellow
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(10),
         ),
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: Row(
           children: [
             Container(
-              width: 33,
-              height: 33,
+              width: 20, // Giảm kích thước hình tròn
+              height: 20, // Giảm kích thước hình tròn
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _selectedAnswer == label ? Colors.yellow : Colors.white,
+                color: _selectedAnswers[_currentPage] == label
+                    ? Colors.black
+                    : Colors.white, // Tô đen khi được chọn
                 border: Border.all(color: Colors.black, width: 1.5),
               ),
             ),
-            SizedBox(width: 10),
-            Text(
-              text,
-              style: TextStyle(
-                color: Colors.black,
-                fontFamily: 'Inter',
-                fontSize: 16,
-                fontWeight: FontWeight.normal,
+            SizedBox(width: 20), // Tăng khoảng cách giữa hình tròn và văn bản
+            Expanded(
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Inter',
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
+                ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class Question {
+  final String questionType;
+  final String questionText;
+  final Map<String, String> choices;
+  final String correctAnswer;
+  final int score;
+  final int order; // Thêm trường order
+
+  Question({
+    required this.questionType,
+    required this.questionText,
+    required this.choices,
+    required this.correctAnswer,
+    required this.score,
+    required this.order, // Thêm trường order
+  });
+
+  factory Question.fromJson(Map<String, dynamic> json) {
+    return Question(
+      questionType: json['questionType'],
+      questionText: json['questionText'],
+      choices: {
+        'choiceA': json['choiceA'] ?? '',
+        'choiceB': json['choiceB'] ?? '',
+        'choiceC': json['choiceC'] ?? '',
+        'choiceD': json['choiceD'] ?? '',
+      },
+      correctAnswer: json['correctAnswer'],
+      score: json['score'],
+      order: json['order'], // Thêm trường order
     );
   }
 }

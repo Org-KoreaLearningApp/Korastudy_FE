@@ -3,16 +3,19 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class FrameSlideComponent extends StatelessWidget {
   final String title;
-  final String subtitle;
-  final String date;
+  final String name;
+  final String createAt;
   final String imagePath;
+  final String id; // Thêm trường id
 
+  // Cập nhật constructor để truyền giá trị id và name với giá trị mặc định là Nguyễn Trung
   const FrameSlideComponent({
     Key? key,
     required this.title,
-    required this.subtitle,
-    required this.date,
+    required this.createAt, // Cập nhật tham số constructor
     required this.imagePath,
+    this.name = "Nguyễn Trung", // Set giá trị mặc định cho name
+    required this.id, // Trường id là bắt buộc
   }) : super(key: key);
 
   @override
@@ -68,7 +71,7 @@ class FrameSlideComponent extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            subtitle,
+            name,
             textAlign: TextAlign.left,
             style: const TextStyle(
               color: Colors.black,
@@ -90,7 +93,7 @@ class FrameSlideComponent extends StatelessWidget {
               ),
               const SizedBox(width: 3),
               Text(
-                date,
+                createAt, // Hiển thị createAt thay vì date
                 textAlign: TextAlign.left,
                 style: const TextStyle(
                   color: Color.fromRGBO(42, 39, 73, 1),

@@ -19,7 +19,7 @@ class _NavBarState extends State<NavBar> {
       color: Colors.white,
       shape: const CircularNotchedRectangle(),
       child: Container(
-        height: 50, // Chiều cao của BottomAppBar
+        height: 50,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[

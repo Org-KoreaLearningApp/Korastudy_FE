@@ -3,14 +3,21 @@ class Vocabulary {
   final String id;
   final String word;
   final String meaning;
+  final String audioUrl; // This should match the field name in Firestore
 
-  Vocabulary({required this.id, required this.word, required this.meaning});
+  Vocabulary(
+      {required this.id,
+      required this.word,
+      required this.meaning,
+      required this.audioUrl});
 
   factory Vocabulary.fromMap(Map<String, dynamic> data, String documentId) {
     return Vocabulary(
       id: documentId,
       word: data['word'] ?? '',
       meaning: data['meaning'] ?? '',
+      audioUrl:
+          data['url'] ?? '', // Change this to match the Firestore field name
     );
   }
 
@@ -18,26 +25,28 @@ class Vocabulary {
     return {
       'word': word,
       'meaning': meaning,
+      'url': audioUrl, // Ensure this matches the Firestore field name
     };
   }
 }
 
 class VocabularySet {
   final String id;
-  final String title;
+  final String name;
 
-  VocabularySet({required this.id, required this.title});
+  VocabularySet({required this.id, required this.name});
 
   factory VocabularySet.fromMap(Map<String, dynamic> data, String documentId) {
     return VocabularySet(
       id: documentId,
-      title: data['title'] ?? '',
+      name: data['name'] ??
+          'Unknown Set', // Provide a default value if 'name' is null
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'title': title,
+      'name': name, // Ensure this matches the Firestore field name
     };
   }
 }

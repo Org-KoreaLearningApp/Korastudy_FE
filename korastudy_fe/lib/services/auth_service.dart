@@ -60,4 +60,10 @@ class AuthService {
       return 'Error: ${e.toString()}';
     }
   }
+
+  Future<Map<String, String?>> getNameAndImage(String uid) async {
+    String? name = await _authRepository.getNameById(uid);
+    String? image = await _authRepository.getImageById(uid);
+    return {'image': image, 'name': name};
+  }
 }

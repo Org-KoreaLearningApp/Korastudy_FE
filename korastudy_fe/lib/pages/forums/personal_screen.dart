@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:korastudy_fe/pages/forums/post_comment_screen.dart';
-import 'package:korastudy_fe/pages/forums/post_detail_screen.dart';
+import 'package:korastudy_fe/pages/forums/personal_post_screen.dart';
+import 'package:korastudy_fe/pages/profile/profile_screen.dart';
 
-class PostScreen extends StatelessWidget {
-  final String postId;
-
-  PostScreen({
-    required this.postId,
-  });
+class PersonalScreen extends StatelessWidget {
+  const PersonalScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +18,7 @@ class PostScreen extends StatelessWidget {
             },
           ),
           title: Text(
-            'Kinh nghiệm ôn thi TOPIK II từ TOPIK I trong 6 tháng',
+            'Cá nhân',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
@@ -30,10 +26,10 @@ class PostScreen extends StatelessWidget {
           bottom: TabBar(
             tabs: [
               Tab(
-                text: "Bài đăng",
+                text: "Tài khoản",
               ),
               Tab(
-                text: "Bình luận",
+                text: "Bài đăng",
               ),
             ],
             labelStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -43,10 +39,8 @@ class PostScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            PostDetailScreen(postId: postId),
-            PostCommentScreen(
-              postId: postId,
-            ),
+            ProfileScreen(),
+            PersonalPostScreen(),
           ],
         ),
       ),

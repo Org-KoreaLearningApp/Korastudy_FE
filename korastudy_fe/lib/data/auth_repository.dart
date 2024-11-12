@@ -19,12 +19,16 @@ class AuthRepository {
     }
   }
 
-  Future<UserModel?> getUserData(String id) async {
+  Future<void> signOut() async {
+    await _firebaseAuth.signOut();
+  }
+
+  Future<Map<String, dynamic>?> getUserData(String id) async {
     try {
       DocumentSnapshot doc = await _firestore.collection('users').doc(id).get();
       if (doc.exists) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        return UserModel.fromFirebase(data);
+        return data;
       }
       return null;
     } catch (e) {
@@ -33,7 +37,24 @@ class AuthRepository {
     }
   }
 
-  Future<void> signOut() async {
-    await _firebaseAuth.signOut();
+  Future<String?> getNameById(String id) async {
+    try {
+      Map<String, dynamic>? userInfo = await getUserData(id);
+      return userInfo?['name'] ?? "No name";
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future<String?> getImageById(String id) async {
+    try {
+      Map<String, dynamic>? userInfo = await getUserData(id);
+      return userInfo?['image'] ??
+          'https://drive.google.com/file/d/1MJo1yoE4mUXqBwp8zFuLDLLhrAHwmvEE/view?usp=drive_link';
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 }
