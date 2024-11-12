@@ -17,4 +17,9 @@ class UserProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void clearUserId() {
+    _userId = "";
+    notifyListeners();
+  }
 }

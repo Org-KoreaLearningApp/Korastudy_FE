@@ -46,5 +46,7 @@ class PostService {
     await _collection.doc(postId).update({'like_num': likeNum});
   }
 
-  // Future<
+  Future<void> deletePost(String postId) async {
+    await FirebaseFirestore.instance.collection('posts').doc(postId).delete();
+  }
 }

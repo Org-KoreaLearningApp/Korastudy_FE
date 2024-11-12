@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:korastudy_fe/provider/user_provider.dart';
 import 'package:korastudy_fe/services/auth_service.dart';
-import 'package:korastudy_fe/widgets/post_item.dart';
+import 'package:korastudy_fe/widgets/profile_post_item.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePostListScreen extends StatefulWidget {
@@ -69,11 +69,11 @@ class _ProfilePostListScreenState extends State<ProfilePostListScreen> {
                           .shrink(); // Hoặc có thể hiển thị thông báo lỗi.
                     }
                     String image = userSnapshort.data!['image'] ??
-                        "https://drive.google.com/file/d/1MJo1yoE4mUXqBwp8zFuLDLLhrAHwmvEE/view?usp=sharing";
+                        "https://drive.google.com/uc?id=1MJo1yoE4mUXqBwp8zFuLDLLhrAHwmvEE";
                     print(image);
                     String name = userSnapshort.data!['name'] ?? "No name";
                     print(name);
-                    return PostItem(
+                    return ProfilePostItem(
                         urlImge: image,
                         name: name,
                         create_at: item['create_at'].toString(),

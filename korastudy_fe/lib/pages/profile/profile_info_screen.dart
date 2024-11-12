@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:korastudy_fe/pages/home/home_screen.dart';
 import 'package:korastudy_fe/provider/user_provider.dart';
 import 'package:korastudy_fe/services/auth_service.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,48 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
         _userDataFuture = _authService.getUserData(uid);
       });
     });
+  }
+
+  Widget _loginReminder() {
+    return Container(
+      child: Center(
+        child: Column(
+          children: [
+            Text(
+                "Vui lòng đăng nhập hoặc đăng ký để xem thông tin cá nhân của bạn."),
+            SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () {},
+                label: Text(
+                  "Đăng nhập",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF1EA5FC), elevation: 5),
+              ),
+            ),
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () {},
+                label: Text(
+                  "Đăng ký",
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFFEEEEEE), elevation: 5),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void updateUserInfo(String field_name) async {
@@ -153,32 +196,69 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
     );
   }
 
+  void showSignoutConformDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text('Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Hủy'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await _authService.signOut();
+                context.read<UserProvider>().clearUserId();
+                Navigator.of(context).pop();
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()));
+              },
+              child: Text('Đăng xuất', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _infoRow(IconData icon, String title, String content) {
     return GestureDetector(
-      child: Row(
-        children: [
-          Icon(icon, size: 30, color: const Color.fromARGB(255, 53, 53, 53)),
-          SizedBox(
-            width: 30,
-          ),
-          Column(
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+        decoration: BoxDecoration(
+          border: Border.symmetric(
+              horizontal: BorderSide(color: Color(0xFF1EA5FC), width: 0.2)),
+          borderRadius: BorderRadius.circular(0.0), // Bo góc viền
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 30, color: const Color.fromARGB(255, 53, 53, 53)),
+            SizedBox(
+              width: 30,
+            ),
+            Column(
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              Text(
-                content,
-                style: TextStyle(
-                  color: Color(0xFF1EA5FC),
-                ),
-              )
-            ],
-          )
-        ],
+                Text(
+                  content,
+                  style: TextStyle(
+                    color: Color(0xFF1EA5FC),
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
       ),
       onTap: () {
         if (title == "Profile Image") {
@@ -193,7 +273,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(20.0),
         child: FutureBuilder(
             future: _userDataFuture,
             builder: (context, snapshort) {
@@ -276,7 +356,34 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                         height: 20,
                       ),
                       _infoRow(Icons.phone, "Phone Num",
-                          data['phoneNum'] ?? 'No phone')
+                          data['phoneNum'] ?? 'No phone'),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      GestureDetector(
+                        child: Row(
+                          children: [
+                            Icon(Icons.logout, size: 30, color: Colors.red),
+                            SizedBox(
+                              width: 30,
+                            ),
+                            Column(
+                              children: [
+                                Text(
+                                  "Đăng xuất",
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        onTap: () {
+                          showSignoutConformDialog(context);
+                        },
+                      ),
                     ],
                   )
                 ],

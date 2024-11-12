@@ -23,7 +23,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final SecureStorageService _secureStorageService = SecureStorageService();
-  final UserProvider _userProvider = UserProvider();
 
   bool _saveAccount = false;
   String _errorText = "";
@@ -84,7 +83,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             'birthday': "${now.year}-${now.month}-${now.day}",
             'address': "",
             'image':
-                "https://drive.google.com/file/d/1MJo1yoE4mUXqBwp8zFuLDLLhrAHwmvEE/view?usp=drive_link",
+                "https://drive.google.com/uc?id=1MJo1yoE4mUXqBwp8zFuLDLLhrAHwmvEE",
             'phoneNum': "",
             'active': true,
             'country': "",
@@ -274,28 +273,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       SizedBox(
                         height: 10,
                       ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: () {},
-                              label: Text(
-                                "Đăng nhập bằng Google",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                              ),
-                              icon: Icon(
-                                Icons.person,
-                                color: Colors.black,
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xFFEEEEEE),
-                                  elevation: 5),
-                            ),
-                          )
-                        ],
-                      ),
+                      // Row(
+                      //   children: [
+                      //     Expanded(
+                      //       child: ElevatedButton.icon(
+                      //         onPressed: () {},
+                      //         label: Text(
+                      //           "Đăng nhập bằng Google",
+                      //           style: TextStyle(
+                      //             color: Colors.black,
+                      //           ),
+                      //         ),
+                      //         icon: Icon(
+                      //           Icons.person,
+                      //           color: Colors.black,
+                      //         ),
+                      //         style: ElevatedButton.styleFrom(
+                      //             backgroundColor: Color(0xFFEEEEEE),
+                      //             elevation: 5),
+                      //       ),
+                      //     )
+                      //   ],
+                      // ),
                       SizedBox(
                         height: 20,
                       ),
