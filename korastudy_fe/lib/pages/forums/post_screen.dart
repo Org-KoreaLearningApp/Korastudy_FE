@@ -4,8 +4,10 @@ import 'package:korastudy_fe/pages/forums/post_detail_screen.dart';
 
 class PostScreen extends StatelessWidget {
   final String postId;
+  final String postName;
 
   PostScreen({
+    required this.postName,
     required this.postId,
   });
 

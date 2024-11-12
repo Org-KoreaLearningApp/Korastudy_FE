@@ -22,7 +22,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passController = TextEditingController();
   // final SharedPreferencesService _prefsService = SharedPreferencesService();
   final SecureStorageService _secureStorageService = SecureStorageService();
-  final UserProvider _userProvider = UserProvider();
 
   bool _saveAccount = false;
   String _errorText = "";

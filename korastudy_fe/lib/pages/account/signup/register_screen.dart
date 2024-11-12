@@ -69,23 +69,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
         User? currentUser = userCredential.user;
 
-        DateTime now = DateTime.now();
+        if (currentUser != null) {
+          Provider.of<UserProvider>(context, listen: false).fetchUserId();
+          DateTime now = DateTime.now();
 
-        // After successful registration, save additional user data to Firestore
-        await _firestore.collection('users').doc(userCredential.user?.uid).set({
-          'id': Provider.of<UserProvider>(context, listen: false).userId,
-          'name': _nameController.text.trim(),
-          'email': _emailController.text.trim(),
-          'birthday': "${now.year}-${now.month}-${now.day}",
-          'address': "",
-          'image':
-              "https://drive.google.com/file/d/1MJo1yoE4mUXqBwp8zFuLDLLhrAHwmvEE/view?usp=drive_link",
-          'phoneNum': "",
-          'active': true,
-          'country': "",
-          'description': "",
-          'vip': false,
-        });
+          // After successful registration, save additional user data to Firestore
+          await _firestore
+              .collection('users')
+              .doc(userCredential.user?.uid)
+              .set({
+            'id': Provider.of<UserProvider>(context, listen: false).userId,
+            'name': _nameController.text.trim(),
+            'email': _emailController.text.trim(),
+            'birthday': "${now.year}-${now.month}-${now.day}",
+            'address': "",
+            'image':
+                "https://drive.google.com/file/d/1MJo1yoE4mUXqBwp8zFuLDLLhrAHwmvEE/view?usp=drive_link",
+            'phoneNum': "",
+            'active': true,
+            'country': "",
+            'description': "",
+            'vip': false,
+          });
+        }
 
         // // Retrieve the user document from Firestore after registration
         // DocumentSnapshot userDoc = await _firestore
@@ -110,8 +116,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             _passwordController.text.trim(),
           );
         }
-
-        await Provider.of<UserProvider>(context, listen: false).fetchUserId();
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Registration successful!')),

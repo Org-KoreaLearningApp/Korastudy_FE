@@ -34,6 +34,10 @@ class PostService {
     return _postRepository.getPostData(postId);
   }
 
+  Future<Map<String, dynamic>?> getPostName(String postId) async {
+    return _postRepository.getPostData(postId);
+  }
+
   Future<void> updateLikeCount(String postId, int likeNum) async {
     await _collection.doc(postId).update({'like_num': likeNum});
   }

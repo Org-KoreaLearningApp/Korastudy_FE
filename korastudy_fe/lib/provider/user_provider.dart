@@ -5,10 +5,10 @@ class UserProvider with ChangeNotifier {
   String _userId = "";
   String get userId => _userId;
 
-  // void setUserId(String id) {
-  //   _userId = id;
-  //   notifyListeners();
-  // }
+  void setUserId(String id) {
+    _userId = id;
+    notifyListeners();
+  }
 
   Future<void> fetchUserId() async {
     final user = FirebaseAuth.instance.currentUser;

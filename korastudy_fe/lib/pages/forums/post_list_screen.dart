@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:korastudy_fe/services/auth_service.dart';
 import 'package:korastudy_fe/widgets/post_item.dart';
-import 'package:korastudy_fe/widgets/post_list.dart';
-import 'package:korastudy_fe/widgets/post_type_button.dart';
 
 class PostListScreen extends StatefulWidget {
   const PostListScreen({super.key});

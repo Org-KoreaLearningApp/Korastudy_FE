@@ -28,8 +28,10 @@ class PostItem extends StatelessWidget {
   });
 
   void transferToDetail(BuildContext context) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => PostScreen(postId: postId)));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PostScreen(postName: title, postId: postId)));
   }
 
   @override
