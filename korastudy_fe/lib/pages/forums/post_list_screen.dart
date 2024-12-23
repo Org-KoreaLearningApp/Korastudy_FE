@@ -144,7 +144,7 @@ class _PostListScreenState extends State<PostListScreen> {
                           .shrink(); // Hoặc có thể hiển thị thông báo lỗi.
                     }
                     String image = userSnapshort.data!['image'] ??
-                        "https://drive.google.com/file/d/1MJo1yoE4mUXqBwp8zFuLDLLhrAHwmvEE/view?usp=sharing";
+                        "https://drive.google.com/uc?id=1MJo1yoE4mUXqBwp8zFuLDLLhrAHwmvEE";
                     print(image);
                     String name = userSnapshort.data!['name'] ?? "No name";
                     print(name);

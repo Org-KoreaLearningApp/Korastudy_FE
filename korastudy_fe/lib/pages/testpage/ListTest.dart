@@ -59,7 +59,7 @@ class ListTestWidget extends StatelessWidget {
           style: TextStyle(
             color: Colors.white,
             fontFamily: 'Inter',
-            fontSize: 20,
+            fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -121,10 +121,10 @@ class ListTestWidget extends StatelessWidget {
         children: <Widget>[
           Center(
             child: Image.asset(
-              'assets/images/user3.jpg',
+              'assets/images/Learnnew3.jpg',
               width: double.infinity,
               height: 200,
-              fit: BoxFit.cover,
+              fit: BoxFit.fill,
             ),
           ),
           SizedBox(height: 16),

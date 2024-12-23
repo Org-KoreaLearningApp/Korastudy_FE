@@ -23,7 +23,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final SecureStorageService _secureStorageService = SecureStorageService();
-  final UserProvider _userProvider = UserProvider();
 
   bool _saveAccount = false;
   String _errorText = "";
@@ -69,23 +68,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
         User? currentUser = userCredential.user;
 
-        DateTime now = DateTime.now();
+        if (currentUser != null) {
+          Provider.of<UserProvider>(context, listen: false).fetchUserId();
+          DateTime now = DateTime.now();
 
-        // After successful registration, save additional user data to Firestore
-        await _firestore.collection('users').doc(userCredential.user?.uid).set({
-          'id': Provider.of<UserProvider>(context, listen: false).userId,
-          'name': _nameController.text.trim(),
-          'email': _emailController.text.trim(),
-          'birthday': "${now.year}-${now.month}-${now.day}",
-          'address': "",
-          'image':
-              "https://drive.google.com/file/d/1MJo1yoE4mUXqBwp8zFuLDLLhrAHwmvEE/view?usp=drive_link",
-          'phoneNum': "",
-          'active': true,
-          'country': "",
-          'description': "",
-          'vip': false,
-        });
+          // After successful registration, save additional user data to Firestore
+          await _firestore
+              .collection('users')
+              .doc(userCredential.user?.uid)
+              .set({
+            'id': Provider.of<UserProvider>(context, listen: false).userId,
+            'name': _nameController.text.trim(),
+            'email': _emailController.text.trim(),
+            'birthday': "${now.year}-${now.month}-${now.day}",
+            'address': "",
+            'image':
+                "https://drive.google.com/uc?id=1MJo1yoE4mUXqBwp8zFuLDLLhrAHwmvEE",
+            'phoneNum': "",
+            'active': true,
+            'country': "",
+            'description': "",
+            'vip': false,
+          });
+        }
 
         // // Retrieve the user document from Firestore after registration
         // DocumentSnapshot userDoc = await _firestore
@@ -110,8 +115,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             _passwordController.text.trim(),
           );
         }
-
-        await Provider.of<UserProvider>(context, listen: false).fetchUserId();
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Registration successful!')),
@@ -154,9 +157,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/bg.png'),
-            fit: BoxFit.cover,
-          ),
+              image: AssetImage('assets/images/bg.png'), fit: BoxFit.fitHeight),
         ),
         child: Expanded(
           child: Expanded(
@@ -273,28 +274,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       SizedBox(
                         height: 10,
                       ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: () {},
-                              label: Text(
-                                "Đăng nhập bằng Google",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                              ),
-                              icon: Icon(
-                                Icons.person,
-                                color: Colors.black,
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xFFEEEEEE),
-                                  elevation: 5),
-                            ),
-                          )
-                        ],
-                      ),
+                      // Row(
+                      //   children: [
+                      //     Expanded(
+                      //       child: ElevatedButton.icon(
+                      //         onPressed: () {},
+                      //         label: Text(
+                      //           "Đăng nhập bằng Google",
+                      //           style: TextStyle(
+                      //             color: Colors.black,
+                      //           ),
+                      //         ),
+                      //         icon: Icon(
+                      //           Icons.person,
+                      //           color: Colors.black,
+                      //         ),
+                      //         style: ElevatedButton.styleFrom(
+                      //             backgroundColor: Color(0xFFEEEEEE),
+                      //             elevation: 5),
+                      //       ),
+                      //     )
+                      //   ],
+                      // ),
                       SizedBox(
                         height: 20,
                       ),
@@ -314,9 +315,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               child: Text(
                                 "Đăng nhập",
                                 style: TextStyle(
-                                  color: Color(0xFF1EA5FC),
+                                  color: Colors.white,
                                   decoration: TextDecoration.underline,
-                                  decorationColor: Color(0xFF1EA5FC),
+                                  decorationColor: Colors.white,
                                   decorationThickness: 2,
                                   fontWeight: FontWeight.bold,
                                 ),

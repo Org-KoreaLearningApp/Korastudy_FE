@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:korastudy_fe/pages/home/home_screen.dart';
 import 'package:korastudy_fe/pages/testpage/DetailResult.dart';
 import 'package:korastudy_fe/pages/testpage/ShowResult.dart';
 import 'package:korastudy_fe/pages/testpage/ListTest.dart';
@@ -47,7 +48,7 @@ class ResultsScreen extends StatelessWidget {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => ListTestWidget()),
+              MaterialPageRoute(builder: (context) => HomeScreen()),
             );
           },
         ),

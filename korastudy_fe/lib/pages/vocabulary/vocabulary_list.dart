@@ -209,7 +209,6 @@ class _VocabularyListWidgetState extends State<VocabularyListWidget> {
                       ),
                     ),
                     Container(
-                      height: screenHeight * 0.7,
                       child: FutureBuilder<List<VocabularySet>>(
                         future: _vocabularySets,
                         builder: (context, snapshot) {

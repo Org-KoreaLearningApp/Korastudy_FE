@@ -34,6 +34,10 @@ class PostService {
     return _postRepository.getPostData(postId);
   }
 
+  Future<Map<String, dynamic>?> getPostName(String postId) async {
+    return _postRepository.getPostData(postId);
+  }
+
   Future<void> updateLikeCount(String postId, int likeNum) async {
     await _collection.doc(postId).update({'like_num': likeNum});
   }
@@ -42,5 +46,7 @@ class PostService {
     await _collection.doc(postId).update({'like_num': likeNum});
   }
 
-  // Future<
+  Future<void> deletePost(String postId) async {
+    await FirebaseFirestore.instance.collection('posts').doc(postId).delete();
+  }
 }
