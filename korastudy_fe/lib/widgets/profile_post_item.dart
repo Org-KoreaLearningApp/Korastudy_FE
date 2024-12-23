@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:korastudy_fe/pages/forums/post_screen.dart';
-import 'package:korastudy_fe/pages/home/home_screen.dart';
+import 'package:korastudy_fe/services/post_service.dart';
 
-class PostItem extends StatelessWidget {
+class ProfilePostItem extends StatelessWidget {
   final String urlImge;
   final String name;
   final String create_at;
@@ -12,10 +12,11 @@ class PostItem extends StatelessWidget {
   final int commentNum;
   final int viewNum;
   final String postId;
+  PostService _postService = PostService();
 
   bool isLike = false;
 
-  PostItem({
+  ProfilePostItem({
     required this.urlImge,
     required this.name,
     required this.create_at,
@@ -32,6 +33,33 @@ class PostItem extends StatelessWidget {
         context,
         MaterialPageRoute(
             builder: (context) => PostScreen(postName: title, postId: postId)));
+  }
+
+  Future<void> showDelConformDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Xác nhận xóa bài đăng'),
+          content: Text('Bạn có chắc chắn muốn xóa bài post này không?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Hủy'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await _postService.deletePost(postId);
+                Navigator.of(context).pop();
+              },
+              child: Text('Xóa', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -64,21 +92,32 @@ class PostItem extends StatelessWidget {
                   SizedBox(
                     width: 15.0,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        name,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
-                      Text(
-                        create_at,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(color: Color(0xFFA5A5A5)),
-                      )
-                    ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          name,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        Text(
+                          create_at,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(color: Color(0xFFA5A5A5)),
+                        )
+                      ],
+                    ),
                   ),
+                  IconButton(
+                      alignment: Alignment.centerRight,
+                      onPressed: () {
+                        showDelConformDialog(context);
+                      },
+                      icon: Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      ))
                 ],
               ),
               SizedBox(
@@ -106,15 +145,10 @@ class PostItem extends StatelessWidget {
                       // child:
                       Row(
                         children: [
-                          IconButton(
-                            onPressed: () {
-                              isLike = !isLike;
-                            },
-                            icon: isLike
-                                ? Icon(Icons.thumb_up_rounded)
-                                : Icon(Icons.thumb_up),
+                          Icon(
+                            Icons.thumb_up,
                             color: Color(0xFFA5A5A5),
-                            iconSize: 20,
+                            size: 20,
                           ),
                           Text("${likeNum} thích",
                               style: TextStyle(

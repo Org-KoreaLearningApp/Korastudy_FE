@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:korastudy_fe/pages/account/reset_password_screen.dart';
 import 'package:korastudy_fe/pages/account/signup/register_screen.dart';
 import 'package:korastudy_fe/pages/home/home_screen.dart';
 import 'package:korastudy_fe/provider/user_provider.dart';
 import 'package:korastudy_fe/services/auth_service.dart';
 import 'package:korastudy_fe/services/secure_storage_service.dart';
 import 'package:korastudy_fe/widgets/login_input.dart';
-
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,9 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final AuthService _authService = AuthService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
-  // final SharedPreferencesService _prefsService = SharedPreferencesService();
   final SecureStorageService _secureStorageService = SecureStorageService();
-  final UserProvider _userProvider = UserProvider();
 
   bool _saveAccount = false;
   String _errorText = "";
@@ -130,14 +126,11 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: Color(0xFF1EA5FC),
       ),
       body: Container(
-        height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/bg.png'),
-            fit: BoxFit.cover,
-          ),
+              image: AssetImage('assets/images/bg.png'), fit: BoxFit.fitHeight),
         ),
-        child: SingleChildScrollView(
+        child: Expanded(
           child: Padding(
             padding: const EdgeInsets.all(35.0),
             child: Column(
@@ -183,43 +176,50 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Row(
                   children: [
-                    Checkbox(
-                      value: _saveAccount,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _saveAccount = value ?? false;
-                        });
-                      },
-                      activeColor: Colors.black,
-                    ),
-                    Text(
-                      "Lưu tài khoản",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Spacer(),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ResetPasswordScreen()),
-                        );
-                      },
-                      child: Text(
-                        "Quên mật khẩu",
-                        style: TextStyle(
-                          color: Color(0xFF1EA5FC),
-                          decoration: TextDecoration.underline,
-                          decorationColor: Color(0xFF1EA5FC),
-                          decorationThickness: 2,
-                          fontWeight: FontWeight.bold,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Checkbox(
+                          value: _saveAccount,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _saveAccount = value ?? false;
+                            });
+                          },
+                          activeColor: Colors.black,
                         ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                      ),
+                        Text(
+                          "Lưu tài khoản",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
+                    SizedBox(
+                      width: 40.0,
+                    ),
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //           builder: (context) => ResetPasswordScreen()),
+                    //     );
+                    //   },
+                    //   child: Text(
+                    //     "Quên mật khẩu",
+                    //     style: TextStyle(
+                    //       color: Color(0xFF1EA5FC),
+                    //       decoration: TextDecoration.underline,
+                    //       decorationColor: Color(0xFF1EA5FC),
+                    //       decorationThickness: 2,
+                    //       fontWeight: FontWeight.bold,
+                    //     ),
+                    //   ),
+                    //   style: ElevatedButton.styleFrom(
+                    //     backgroundColor: Colors.transparent,
+                    //     shadowColor: Colors.transparent,
+                    //   ),
+                    // ),
                   ],
                 ),
                 SizedBox(
@@ -245,27 +245,27 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: loginByGoogle,
-                        label: Text(
-                          "Đăng nhập bằng Google",
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        icon: Icon(
-                          Icons.person,
-                          color: Colors.black,
-                        ),
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFFEEEEEE), elevation: 5),
-                      ),
-                    )
-                  ],
-                ),
+                // Row(
+                //   children: [
+                //     Expanded(
+                //       child: ElevatedButton.icon(
+                //         onPressed: loginByGoogle,
+                //         label: Text(
+                //           "Đăng nhập bằng Google",
+                //           style: TextStyle(
+                //             color: Colors.black,
+                //           ),
+                //         ),
+                //         icon: Icon(
+                //           Icons.person,
+                //           color: Colors.black,
+                //         ),
+                //         style: ElevatedButton.styleFrom(
+                //             backgroundColor: Color(0xFFEEEEEE), elevation: 5),
+                //       ),
+                //     )
+                //   ],
+                // ),
                 SizedBox(
                   height: 20,
                 ),

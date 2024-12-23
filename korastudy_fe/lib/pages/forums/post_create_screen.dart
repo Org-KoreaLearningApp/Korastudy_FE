@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:korastudy_fe/pages/home/home_screen.dart';
+import 'package:korastudy_fe/pages/profile/profile_screen.dart';
 import 'package:korastudy_fe/provider/user_provider.dart';
 import 'package:korastudy_fe/services/post_service.dart';
 import 'package:provider/provider.dart';
@@ -47,8 +48,8 @@ class _PostCreateScreenState extends State<PostCreateScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Create new post successfully!')),
           );
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ProfileScreen()));
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
