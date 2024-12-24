@@ -24,23 +24,45 @@ import 'package:korastudy_fe/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:permission_handler/permission_handler.dart';
-// Tạo bằng Firebase CLI
 
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   await Firebase.initializeApp(
-//     options: DefaultFirebaseOptions.currentPlatform,
-//   );
-//   runApp(MyApp());
-// }
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  // Yêu cầu quyền khi khởi chạy ứng dụng
+  await requestPermissions();
+
   runApp(MyApp());
+}
+
+// Hàm yêu cầu quyền
+Future<void> requestPermissions() async {
+  Map<Permission, PermissionStatus> statuses = await [
+    Permission.camera,
+    Permission.photos,
+    Permission.storage,
+  ].request();
+
+  statuses.forEach((permission, status) {
+    if (status.isGranted) {
+      print("Quyền $permission đã được cấp.");
+    } else if (status.isDenied) {
+      print("Quyền $permission bị từ chối.");
+    } else if (status.isPermanentlyDenied) {
+      print("Quyền $permission bị từ chối vĩnh viễn.");
+    }
+  });
+
+  // Hướng dẫn người dùng mở cài đặt nếu quyền bị từ chối vĩnh viễn
+  if (statuses.values.any((status) => status.isPermanentlyDenied)) {
+    print("Hãy mở cài đặt ứng dụng để cấp quyền cần thiết.");
+    openAppSettings();
+  }
 }
 
 class MyApp extends StatelessWidget {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
