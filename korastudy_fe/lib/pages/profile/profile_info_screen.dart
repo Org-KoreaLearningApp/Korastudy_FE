@@ -4,6 +4,11 @@ import 'package:korastudy_fe/pages/home/home_screen.dart';
 import 'package:korastudy_fe/provider/user_provider.dart';
 import 'package:korastudy_fe/services/auth_service.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart'; // Thêm thư viện này để định dạng ngày tháng
+import 'package:flutter/services.dart'; // Thêm thư viện này để sử dụng FilteringTextInputFormatter
+import 'package:image_picker/image_picker.dart'; // Thêm thư viện này để chọn ảnh
+import 'package:permission_handler/permission_handler.dart'; // Thêm thư viện này để yêu cầu quyền truy cập
+import 'dart:io'; // Thêm thư viện này để làm việc với file
 
 class ProfileInfoScreen extends StatefulWidget {
   const ProfileInfoScreen({super.key});
@@ -44,51 +49,8 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
     });
   }
 
-  // Widget _loginReminder() {
-  //   return Container(
-  //     child: Center(
-  //       child: Column(
-  //         children: [
-  //           Text(
-  //               "Vui lòng đăng nhập hoặc đăng ký để xem thông tin cá nhân của bạn."),
-  //           SizedBox(
-  //             height: 20,
-  //           ),
-  //           Expanded(
-  //             child: ElevatedButton.icon(
-  //               onPressed: () {},
-  //               label: Text(
-  //                 "Đăng nhập",
-  //                 style: TextStyle(
-  //                   color: Colors.white,
-  //                 ),
-  //               ),
-  //               style: ElevatedButton.styleFrom(
-  //                   backgroundColor: Color(0xFF1EA5FC), elevation: 5),
-  //             ),
-  //           ),
-  //           Expanded(
-  //             child: ElevatedButton.icon(
-  //               onPressed: () {},
-  //               label: Text(
-  //                 "Đăng ký",
-  //                 style: TextStyle(
-  //                   color: Colors.black,
-  //                 ),
-  //               ),
-  //               style: ElevatedButton.styleFrom(
-  //                   backgroundColor: Color(0xFFEEEEEE), elevation: 5),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  void updateUserInfo(String field_name) async {
+  void updateUserInfo(String field_name, String content) async {
     String uid = Provider.of<UserProvider>(context, listen: false).userId;
-    String content = _contentController.text;
     String field = "";
     switch (field_name) {
       case "Profile Name":
@@ -100,7 +62,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
       case "Address":
         field = "address";
         break;
-      case "Profile Num":
+      case "Phone Num":
         field = "phoneNum";
         break;
       default:
@@ -112,6 +74,29 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
     });
   }
 
+  Future<void> pickImage() async {
+    try {
+      // Yêu cầu quyền truy cập
+      var status = await Permission.photos.request();
+      if (status.isGranted) {
+        final ImagePicker _picker = ImagePicker();
+        final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+        if (image != null) {
+          File imageFile = File(image.path);
+          // Upload imageFile to your server or Firebase Storage and get the URL
+          // For example, you can use Firebase Storage to upload the image and get the URL
+          // String imageUrl = await uploadImageToFirebase(imageFile);
+          // updateImage(imageUrl);
+        }
+      } else {
+        print("Permission denied");
+      }
+    } catch (e) {
+      print("Error picking image: $e");
+    }
+  }
+
   void showImageDialog() {
     showDialog(
       context: context,
@@ -121,31 +106,45 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
             'Chọn hình ảnh đại diện',
             style: TextStyle(fontSize: 15),
           ),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: ListView.builder(
-              itemCount: _imageTypes.length,
-              itemBuilder: (context, index) {
-                return RadioListTile<String>(
-                  title: CircleAvatar(
-                    backgroundImage: NetworkImage(_imageTypes[index]),
-                  ),
-                  value: _imageTypes[index],
-                  groupValue: imgUrl,
-                  onChanged: (String? value) {
-                    setState(() {
-                      if (value != null) {
-                        imgUrl = value;
-                        selectedIndex = index;
-                        updateImage(value); // Update the image in your service
-                        Navigator.of(context)
-                            .pop(); // Close the dialog after selection
-                      }
-                    });
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  pickImage();
+                  Navigator.of(context).pop();
+                },
+                child: Text('Tải ảnh từ máy lên'),
+              ),
+              SizedBox(height: 10),
+              SizedBox(
+                width: double.maxFinite,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _imageTypes.length,
+                  itemBuilder: (context, index) {
+                    return RadioListTile<String>(
+                      title: CircleAvatar(
+                        backgroundImage: NetworkImage(_imageTypes[index]),
+                      ),
+                      value: _imageTypes[index],
+                      groupValue: imgUrl,
+                      onChanged: (String? value) {
+                        setState(() {
+                          if (value != null) {
+                            imgUrl = value;
+                            selectedIndex = index;
+                            updateImage(value); // Update the image in your service
+                            Navigator.of(context)
+                                .pop(); // Close the dialog after selection
+                          }
+                        });
+                      },
+                    );
                   },
-                );
-              },
-            ),
+                ),
+              ),
+            ],
           ),
           actions: [
             TextButton(
@@ -168,37 +167,55 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
   }
 
   void showMyDialog(String field, String content) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(
-            'Cập nhật thông tin ${field}',
-            style: TextStyle(fontSize: 15),
-          ),
-          content: TextField(
-            controller: _contentController,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Đóng popup
-              },
-              child: Text('Đóng'),
+    if (field == "Birthday") {
+      showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2100),
+      ).then((selectedDate) {
+        if (selectedDate != null) {
+          String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
+          updateUserInfo(field, formattedDate);
+        }
+      });
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              'Cập nhật thông tin ${field}',
+              style: TextStyle(fontSize: 15),
             ),
-            TextButton(
-              onPressed: () async {
-                // Thực hiện một hành động khác
-                updateUserInfo(field);
-                _contentController.text = "";
-                Navigator.of(context).pop();
-              },
-              child: Text('Xác nhận'),
+            content: TextField(
+              controller: _contentController,
+              keyboardType: field == "Phone Num" ? TextInputType.number : TextInputType.text,
+              inputFormatters: field == "Phone Num" 
+                ? [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(11)] 
+                : [],
             ),
-          ],
-        );
-      },
-    );
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Đóng popup
+                },
+                child: Text('Đóng'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  // Thực hiện một hành động khác
+                  updateUserInfo(field, _contentController.text);
+                  _contentController.text = "";
+                  Navigator.of(context).pop();
+                },
+                child: Text('Xác nhận'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   void showSignoutConformDialog(BuildContext context) {
@@ -347,12 +364,12 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                         height: 10,
                       ),
                       _infoRow(Icons.person, "Profile Name",
-                          data['name'] ?? 'No namw'),
+                          data['name'] ?? 'No name'),
                       SizedBox(
                         height: 10,
                       ),
                       _infoRow(Icons.schedule, "Birthday",
-                          data['birthday'] ?? 'No namw'),
+                          data['birthday'] ?? 'No birthday'),
                       SizedBox(
                         height: 10,
                       ),
